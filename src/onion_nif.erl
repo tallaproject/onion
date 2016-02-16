@@ -21,10 +21,6 @@
 
 -spec init() -> ok | {error, any()}.
 init() ->
-    %% Hack: Ensure that libcrypto.so is loaded via OTP.  We do this to avoid
-    %% accidentially using the wrong libcrypto from OpenSSL.
-    _ = crypto:rand_bytes(1),
-
     Module = "onion",
     File = case code:priv_dir(?MODULE) of
         {error, bad_name} ->
