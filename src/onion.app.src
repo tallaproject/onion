@@ -1,0 +1,18 @@
+{application, onion, [
+    {description, "Utility library for working with the Tor network"},
+    {vsn, "0.1.0"},
+    {modules, []},
+    {registered, []},
+    {applications, [
+        kernel,
+        stdlib,
+        crypto,
+        public_key,
+        ssl,
+        enacl,
+        base32,
+        gproc
+    ]}
+]}.
+
+%% vim: set ft=erlang :

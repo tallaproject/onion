@@ -1,0 +1,12 @@
+[{<<"base32">>,
+  {git,"https://github.com/ahf/base32_erlang.git",
+       {ref,"40431a7480176b24863e18b92d9872e54c714df5"}},
+  0},
+ {<<"enacl">>,
+  {git,"https://github.com/jlouis/enacl.git",
+       {ref,"9830068304e4472e22787ae8fbe4557dc5215403"}},
+  0},
+ {<<"gproc">>,
+  {git,"https://github.com/uwiger/gproc.git",
+       {ref,"85d8dddf2b04690cee051994b40bfa45925f9e36"}},
+  0}].
