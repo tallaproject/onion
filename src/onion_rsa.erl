@@ -8,8 +8,8 @@
 %%% @doc RSA Cryptosystem API
 %%%
 %%% This helper module contains utilities for working with the RSA
-%%% cryptosystem. It's made to simplify the usage of Erlang's `public_key`
-%%% and `crypto` applications for our specific use case.
+%%% cryptosystem. It's made to simplify the usage of Erlang's public_key
+%%% and crypto applications for our specific use case.
 %%%
 %%% @end
 %%% -----------------------------------------------------------
