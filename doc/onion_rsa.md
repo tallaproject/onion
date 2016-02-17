@@ -6,16 +6,16 @@
 * [Function Index](#index)
 * [Function Details](#functions)
 
-RSA Cryptosystem API.
+Onion RSA API.
 
 __Authors:__ Alexander Færøy ([`ahf@0x90.dk`](mailto:ahf@0x90.dk)).
 
 <a name="description"></a>
 
 ## Description ##
-This helper module contains utilities for working with the RSA
-cryptosystem. It's made to simplify the usage of Erlang's public_key
-and crypto applications for our specific use case.
+This module contains utilities for working with RSA.
+It's made to simplify the use of Erlang's public_key
+and crypto applications for our specific use cases.
 
 <a name="types"></a>
 
@@ -66,7 +66,7 @@ secret_key() = <a href="public_key.md#type-rsa_private_key">public_key:rsa_priva
 ## Function Index ##
 
 
-<table width="100%" border="1" cellspacing="0" cellpadding="2" summary="function index"><tr><td valign="top"><a href="#der_decode_public_key-1">der_decode_public_key/1</a></td><td></td></tr><tr><td valign="top"><a href="#der_decode_secret_key-1">der_decode_secret_key/1</a></td><td></td></tr><tr><td valign="top"><a href="#der_encode-1">der_encode/1</a></td><td></td></tr><tr><td valign="top"><a href="#key_size-1">key_size/1</a></td><td></td></tr><tr><td valign="top"><a href="#keypair-1">keypair/1</a></td><td></td></tr><tr><td valign="top"><a href="#keypair-2">keypair/2</a></td><td></td></tr><tr><td valign="top"><a href="#pem_decode-1">pem_decode/1</a></td><td></td></tr><tr><td valign="top"><a href="#pem_encode-1">pem_encode/1</a></td><td></td></tr><tr><td valign="top"><a href="#private_decrypt-2">private_decrypt/2</a></td><td></td></tr><tr><td valign="top"><a href="#private_decrypt-3">private_decrypt/3</a></td><td></td></tr><tr><td valign="top"><a href="#private_encrypt-2">private_encrypt/2</a></td><td></td></tr><tr><td valign="top"><a href="#private_encrypt-3">private_encrypt/3</a></td><td></td></tr><tr><td valign="top"><a href="#public_decrypt-2">public_decrypt/2</a></td><td></td></tr><tr><td valign="top"><a href="#public_decrypt-3">public_decrypt/3</a></td><td></td></tr><tr><td valign="top"><a href="#public_encrypt-2">public_encrypt/2</a></td><td></td></tr><tr><td valign="top"><a href="#public_encrypt-3">public_encrypt/3</a></td><td></td></tr><tr><td valign="top"><a href="#secret_key_to_public_key-1">secret_key_to_public_key/1</a></td><td></td></tr><tr><td valign="top"><a href="#sign-3">sign/3</a></td><td></td></tr><tr><td valign="top"><a href="#verify-4">verify/4</a></td><td></td></tr></table>
+<table width="100%" border="1" cellspacing="0" cellpadding="2" summary="function index"><tr><td valign="top"><a href="#der_decode_public_key-1">der_decode_public_key/1</a></td><td>der_decode_public_key/1 decodes a given binary into a public key.</td></tr><tr><td valign="top"><a href="#der_decode_secret_key-1">der_decode_secret_key/1</a></td><td>der_decode_secret_key/1 decodes a given binary into a secret key.</td></tr><tr><td valign="top"><a href="#der_encode-1">der_encode/1</a></td><td>der_encode/1 DER encodes a given public key or secret key.</td></tr><tr><td valign="top"><a href="#key_size-1">key_size/1</a></td><td></td></tr><tr><td valign="top"><a href="#keypair-1">keypair/1</a></td><td>keypair/1 creates a new RSA keypair of a given bit-size.</td></tr><tr><td valign="top"><a href="#keypair-2">keypair/2</a></td><td>keypair/1 creates a new keypair of a given bit-size and with a specified public exponent.</td></tr><tr><td valign="top"><a href="#pem_decode-1">pem_decode/1</a></td><td></td></tr><tr><td valign="top"><a href="#pem_encode-1">pem_encode/1</a></td><td></td></tr><tr><td valign="top"><a href="#private_decrypt-2">private_decrypt/2</a></td><td></td></tr><tr><td valign="top"><a href="#private_decrypt-3">private_decrypt/3</a></td><td></td></tr><tr><td valign="top"><a href="#private_encrypt-2">private_encrypt/2</a></td><td></td></tr><tr><td valign="top"><a href="#private_encrypt-3">private_encrypt/3</a></td><td></td></tr><tr><td valign="top"><a href="#public_decrypt-2">public_decrypt/2</a></td><td></td></tr><tr><td valign="top"><a href="#public_decrypt-3">public_decrypt/3</a></td><td></td></tr><tr><td valign="top"><a href="#public_encrypt-2">public_encrypt/2</a></td><td></td></tr><tr><td valign="top"><a href="#public_encrypt-3">public_encrypt/3</a></td><td></td></tr><tr><td valign="top"><a href="#secret_key_to_public_key-1">secret_key_to_public_key/1</a></td><td>secret_key_to_public_key/1 creates a public key from a given secret key.</td></tr><tr><td valign="top"><a href="#sign-3">sign/3</a></td><td></td></tr><tr><td valign="top"><a href="#verify-4">verify/4</a></td><td></td></tr></table>
 
 
 <a name="functions"></a>
@@ -83,6 +83,11 @@ der_decode_public_key(Bytes) -&gt; {ok, PublicKey} | {error, Reason}
 
 <ul class="definitions"><li><code>Bytes = binary()</code></li><li><code>PublicKey = <a href="#type-public_key">public_key()</a></code></li><li><code>Reason = term()</code></li></ul>
 
+der_decode_public_key/1 decodes a given binary into a public key.
+
+Decodes a given binary into a public key. This function will return an error
+tuple if given an invalid DER encoded RSA public key.
+
 <a name="der_decode_secret_key-1"></a>
 
 ### der_decode_secret_key/1 ###
@@ -93,6 +98,11 @@ der_decode_secret_key(Bytes) -&gt; {ok, SecretKey} | {error, Reason}
 
 <ul class="definitions"><li><code>Bytes = binary()</code></li><li><code>SecretKey = <a href="#type-secret_key">secret_key()</a></code></li><li><code>Reason = term()</code></li></ul>
 
+der_decode_secret_key/1 decodes a given binary into a secret key.
+
+Decodes a given binary into a secret key. This function will return an error
+tuple if given an invalid DER encoded RSA secret key.
+
 <a name="der_encode-1"></a>
 
 ### der_encode/1 ###
@@ -102,6 +112,11 @@ der_encode(Key) -&gt; {ok, Bytes} | {error, Reason}
 </code></pre>
 
 <ul class="definitions"><li><code>Key = <a href="#type-key">key()</a></code></li><li><code>Bytes = binary()</code></li><li><code>Reason = term()</code></li></ul>
+
+der_encode/1 DER encodes a given public key or secret key.
+
+DER encodes a given public key or secret key and returns the key as a
+binary() if the encoding was succesful.
 
 <a name="key_size-1"></a>
 
@@ -123,6 +138,11 @@ keypair(Bits) -&gt; {ok, KeyPair} | {error, Reason}
 
 <ul class="definitions"><li><code>Bits = pos_integer()</code></li><li><code>KeyPair = <a href="#type-keypair">keypair()</a></code></li><li><code>Reason = term()</code></li></ul>
 
+keypair/1 creates a new RSA keypair of a given bit-size.
+
+Generates and returns a new RSA keypair. The return value upon success is a
+map to avoid using the public key as the secret key and vice versa.
+
 <a name="keypair-2"></a>
 
 ### keypair/2 ###
@@ -132,6 +152,11 @@ keypair(Bits, PublicExponent) -&gt; {ok, KeyPair} | {error, Reason}
 </code></pre>
 
 <ul class="definitions"><li><code>Bits = pos_integer()</code></li><li><code>PublicExponent = pos_integer()</code></li><li><code>KeyPair = <a href="#type-keypair">keypair()</a></code></li><li><code>Reason = term()</code></li></ul>
+
+keypair/1 creates a new keypair of a given bit-size and with a specified public exponent.
+
+Generates and returns a new RSA keypair. The return value upon success is a
+map to avoid using the public key as the secret key and vice versa.
 
 <a name="pem_decode-1"></a>
 
@@ -242,6 +267,11 @@ secret_key_to_public_key(SecretKey) -&gt; PublicKey
 </code></pre>
 
 <ul class="definitions"><li><code>SecretKey = <a href="#type-secret_key">secret_key()</a></code></li><li><code>PublicKey = <a href="#type-public_key">public_key()</a></code></li></ul>
+
+secret_key_to_public_key/1 creates a public key from a given secret key.
+
+Creates an RSA public key record from a given RSA secret key record by
+copying the RSA modulus and public exponent of the secret key.
 
 <a name="sign-3"></a>
 

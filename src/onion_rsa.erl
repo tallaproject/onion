@@ -5,11 +5,11 @@
 %%%
 %%% -----------------------------------------------------------
 %%% @author Alexander Færøy <ahf@0x90.dk>
-%%% @doc RSA Cryptosystem API
+%%% @doc Onion RSA API
 %%%
-%%% This helper module contains utilities for working with the RSA
-%%% cryptosystem. It's made to simplify the usage of Erlang's public_key
-%%% and crypto applications for our specific use case.
+%%% This module contains utilities for working with RSA.
+%%% It's made to simplify the use of Erlang's public_key
+%%% and crypto applications for our specific use cases.
 %%%
 %%% @end
 %%% -----------------------------------------------------------
@@ -60,6 +60,12 @@
 
 -include("onion_test.hrl").
 
+%% @doc keypair/1 creates a new RSA keypair of a given bit-size.
+%%
+%% Generates and returns a new RSA keypair. The return value upon success is a
+%% map to avoid using the public key as the secret key and vice versa.
+%%
+%% @end
 -spec keypair(Bits) -> {ok, KeyPair} | {error, Reason}
     when
         Bits           :: pos_integer(),
@@ -68,6 +74,12 @@
 keypair(Bits) ->
     keypair(Bits, 65537).
 
+%% @doc keypair/1 creates a new keypair of a given bit-size and with a specified public exponent.
+%%
+%% Generates and returns a new RSA keypair. The return value upon success is a
+%% map to avoid using the public key as the secret key and vice versa.
+%%
+%% @end
 -spec keypair(Bits, PublicExponent) -> {ok, KeyPair} | {error, Reason}
     when
         Bits           :: pos_integer(),
@@ -84,6 +96,12 @@ keypair(Bits, PublicExponent) ->
             Error
     end.
 
+%% @doc secret_key_to_public_key/1 creates a public key from a given secret key.
+%%
+%% Creates an RSA public key record from a given RSA secret key record by
+%% copying the RSA modulus and public exponent of the secret key.
+%%
+%% @end
 -spec secret_key_to_public_key(SecretKey) -> PublicKey
     when
         SecretKey :: secret_key(),
@@ -94,6 +112,12 @@ secret_key_to_public_key(#'RSAPrivateKey'{ modulus = N, publicExponent = E }) ->
             publicExponent = E
         }.
 
+%% @doc der_encode/1 DER encodes a given public key or secret key.
+%%
+%% DER encodes a given public key or secret key and returns the key as a
+%% binary() if the encoding was succesful.
+%%
+%% @end
 -spec der_encode(Key) -> {ok, Bytes} | {error, Reason}
     when
         Key    :: key(),
@@ -113,6 +137,12 @@ der_encode(#'RSAPublicKey' {} = PublicKey) ->
         {error, invalid_public_key}
     end.
 
+%% @doc der_decode_secret_key/1 decodes a given binary into a secret key.
+%%
+%% Decodes a given binary into a secret key. This function will return an error
+%% tuple if given an invalid DER encoded RSA secret key.
+%%
+%% @end
 -spec der_decode_secret_key(Bytes) -> {ok, SecretKey} | {error, Reason}
     when
         Bytes     :: binary(),
@@ -125,6 +155,12 @@ der_decode_secret_key(Bytes) when is_binary(Bytes) ->
         {error, invalid_secret_key}
     end.
 
+%% @doc der_decode_public_key/1 decodes a given binary into a public key.
+%%
+%% Decodes a given binary into a public key. This function will return an error
+%% tuple if given an invalid DER encoded RSA public key.
+%%
+%% @end
 -spec der_decode_public_key(Bytes) -> {ok, PublicKey} | {error, Reason}
     when
         Bytes     :: binary(),
