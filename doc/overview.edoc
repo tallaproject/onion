@@ -1,0 +1,17 @@
+@copyright 2015, 2016 The Talla Authors.
+
+@title Onion
+
+@doc
+
+Erlang utility library for working with the Tor network.
+
+== Tests ==
+
+<pre>$ make check</pre>
+
+== Documentation ==
+
+<pre>$ make doc</pre>
+
+@end
