@@ -38,6 +38,7 @@ init() ->
     erlang:load_nif(File, 0).
 
 %% @private
+-spec rsa_generate_private_key(non_neg_integer(), non_neg_integer()) -> binary().
 rsa_generate_private_key(_Bits, _E) ->
     ?nif_stub.
 
