@@ -28,10 +28,7 @@
 -type public_key() :: binary().
 -type keypair()    :: #{ secret => secret_key(), public => public_key() }.
 
--ifdef(TEST).
--include_lib("eunit/include/eunit.hrl").
--include_lib("triq/include/triq.hrl").
--endif.
+-include("onion_test.hrl").
 
 -spec keypair() -> KeyPair
     when

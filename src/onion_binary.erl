@@ -21,10 +21,7 @@
          fingerprint/2
         ]).
 
--ifdef(TEST).
--include_lib("eunit/include/eunit.hrl").
--include_lib("triq/include/triq.hrl").
--endif.
+-include("onion_test.hrl").
 
 -spec trim(Subject, Pattern) -> Result
     when

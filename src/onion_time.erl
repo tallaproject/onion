@@ -17,10 +17,7 @@
          to_unix_epoch/1
         ]).
 
--ifdef(TEST).
--include_lib("eunit/include/eunit.hrl").
--include_lib("triq/include/triq.hrl").
--endif.
+-include("onion_test.hrl").
 
 %% calendar:datetime_to_gregorian_seconds({{1970, 1, 1}, {0, 0, 0}}).
 -define(UNIX_EPOCH, 62167219200).

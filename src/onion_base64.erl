@@ -19,10 +19,7 @@
          decode/1
         ]).
 
--ifdef(TEST).
--include_lib("eunit/include/eunit.hrl").
--include_lib("triq/include/triq.hrl").
--endif.
+-include("onion_test.hrl").
 
 -spec encode(Data) -> Base64Data
     when

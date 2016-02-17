@@ -17,10 +17,7 @@
 %% API.
 -export([intersperse/2]).
 
--ifdef(TEST).
--include_lib("eunit/include/eunit.hrl").
--include_lib("triq/include/triq.hrl").
--endif.
+-include("onion_test.hrl").
 
 %% @doc Intersperse List with Element.
 -spec intersperse(Element :: term(), List :: [term()]) -> [term()].

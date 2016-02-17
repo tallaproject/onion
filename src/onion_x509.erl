@@ -67,10 +67,7 @@
 
 -include_lib("public_key/include/public_key.hrl").
 
--ifdef(TEST).
--include_lib("eunit/include/eunit.hrl").
--include_lib("triq/include/triq.hrl").
--endif.
+-include("onion_test.hrl").
 
 -spec create_certificate(Options) -> {ok, Certificate} | {error, Reason}
     when

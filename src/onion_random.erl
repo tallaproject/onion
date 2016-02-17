@@ -20,10 +20,7 @@
          hostname/4
         ]).
 
--ifdef(TEST).
--include_lib("eunit/include/eunit.hrl").
--include_lib("triq/include/triq.hrl").
--endif.
+-include("onion_test.hrl").
 
 %% @doc Return N random bytes.
 -spec bytes(N) -> RandomBytes

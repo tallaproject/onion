@@ -89,10 +89,7 @@
                     | destroyed
                     | no_such_service.
 
--ifdef(TEST).
--include_lib("eunit/include/eunit.hrl").
--include_lib("triq/include/triq.hrl").
--endif.
+-include("onion_test.hrl").
 
 %% All values are in bytes.
 -define(KEY_LEN, 16).

@@ -16,10 +16,7 @@
          split/2,
          decode/1]).
 
--ifdef(TEST).
--include_lib("eunit/include/eunit.hrl").
--include_lib("triq/include/triq.hrl").
--endif.
+-include("onion_test.hrl").
 
 -spec get_item(Keyword, Document) -> Item | not_found
     when
