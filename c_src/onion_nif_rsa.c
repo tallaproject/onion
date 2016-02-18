@@ -1,4 +1,4 @@
-// Copyright (c) 2015 The Talla Authors. All rights reserved.
+// Copyright (c) 2015, 2016 The Talla Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
@@ -15,10 +15,9 @@ ERL_NIF_TERM onion_nif_rsa_generate_private_key(ErlNifEnv *env, int argc, const 
 
     BIGNUM *b_e = NULL;
     RSA *rsa = NULL;
-    BIO *bio = NULL;
     int length = 0;
 
-    ErlNifBinary pem_key;
+    ErlNifBinary der_key;
     ERL_NIF_TERM result;
 
     if (argc != 2 || ! enif_get_uint(env, argv[0], &bits) || ! enif_get_uint(env, argv[1], &e))
@@ -56,27 +55,16 @@ ERL_NIF_TERM onion_nif_rsa_generate_private_key(ErlNifEnv *env, int argc, const 
             continue;
         }
 
-        // Initialize BIO.
-        bio = BIO_new(BIO_s_mem());
+        length = i2d_RSAPrivateKey(rsa, NULL);
 
-        if (bio == NULL)
-        {
-            result = make_error_tuple(env, "out_of_memory");
-            continue;
-        }
-
-        PEM_write_bio_RSAPrivateKey(bio, rsa, NULL, NULL, 0, NULL, NULL);
-        length = BIO_pending(bio);
-
-        if (! enif_alloc_binary(length, &pem_key))
+        if (! enif_alloc_binary(length, &der_key))
         {
             result = make_error_tuple(env, "alloc_binary");
             continue;
         }
 
-        BIO_read(bio, pem_key.data, length);
-
-        result = enif_make_binary(env, &pem_key);
+        i2d_RSAPrivateKey(rsa, &der_key.data);
+        result = enif_make_binary(env, &der_key);
     } while (0);
 
     // Clean up.
@@ -85,9 +73,6 @@ ERL_NIF_TERM onion_nif_rsa_generate_private_key(ErlNifEnv *env, int argc, const 
 
     if (rsa != NULL)
         RSA_free(rsa);
-
-    if (bio != NULL)
-        BIO_free_all(bio);
 
     return result;
 }
