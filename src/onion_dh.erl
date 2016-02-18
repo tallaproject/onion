@@ -5,7 +5,13 @@
 %%%
 %%% -----------------------------------------------------------
 %%% @author Alexander Færøy <ahf@0x90.dk>
-%%% @doc Diffie-Hellman Utilities
+%%% @doc Diffie-Hellman API
+%%%
+%%% This module contains functions for key generation and shared secret
+%%% computations for the Diffie-Hellman key exchange algorithm.
+%%%
+%%% Tor uses a generator (g) of 2 and the modulus (p) is a 1024-bit safe prime
+%%% from RFC 2409 section 6.2. See the Tor specification for more information.
 %%%
 %%% @end
 %%% -----------------------------------------------------------
@@ -16,7 +22,15 @@
          shared_secret/2,
          params/0]).
 
--type keypair() :: #{ secret => crypto:dh_private(), public => crypto:dh_public() }.
+%% Types.
+-export_type([secret_key/0,
+              public_key/0,
+              keypair/0]).
+
+-type secret_key() :: crypto:dh_private().
+-type public_key() :: crypto_dh:public().
+-type keypair()    :: #{ secret => secret_key(),
+                         public => public_key() }.
 
 -define(G, 2).
 
@@ -25,19 +39,38 @@
 
 -include("onion_test.hrl").
 
+%% @doc Creates a new Diffie-Hellman keypair.
+%%
+%% Generates and returns a new Diffie-Hellman keypair. The return value is a
+%% map to avoid using the public key as the secret key and vice versa.
+%%
+%% @end
 -spec keypair() -> keypair().
 keypair() ->
     {PublicKey, SecretKey} = crypto:generate_key(dh, params()),
     #{ secret => SecretKey, public => PublicKey }.
 
+%% @doc Computes the shared secret between a SecretKey and PublicKey.
+%%
+%% This function computes the shared secret between a given SecretKey and
+%% PublicKey.
+%%
+%% @end
 -spec shared_secret(SecretKey, PublicKey) -> SharedSecret
     when
-        SecretKey    :: crypto:dh_private(),
-        PublicKey    :: crypto:dh_public(),
+        SecretKey    :: secret_key(),
+        PublicKey    :: public_key(),
         SharedSecret :: binary().
 shared_secret(SecretKey, PublicKey) ->
     crypto:compute_key(dh, PublicKey, SecretKey, params()).
 
+%% @doc Diffie-Hellman parameters used by Tor (from RFC 2409).
+%%
+%% This function will return a list containing two elements: P (the modulus)
+%% and G (the generator). These parameters are needed for the other
+%% Diffie-Hellman computations in this module and in the OTP crypto module.
+%%
+%% @end
 -spec params() -> [non_neg_integer()].
 params() ->
     [?P, ?G].
