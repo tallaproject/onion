@@ -58,17 +58,3 @@ shared_secret(SecretKey, PublicKey) ->
         Result    :: binary().
 scalarmult(SecretKey, BasePoint) ->
     enacl:curve25519_scalarmult(SecretKey, BasePoint).
-
--ifdef(TEST).
-test_keypair() ->
-    #{ secret := S, public := P } = keypair(),
-    {S, P}.
-
-prop_shared_secret() ->
-    ?FORALL({{AS, AP}, {BS, BP}}, {test_keypair(), test_keypair()},
-        begin
-            SharedA = shared_secret(AS, BP),
-            SharedB = shared_secret(BS, AP),
-            SharedA =:= SharedB
-        end).
--endif.

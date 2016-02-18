@@ -39,13 +39,3 @@ decode(Base32Data) when is_binary(Base32Data) ->
     catch _:_ ->
         {error, invalid_base32}
     end.
-
--ifdef(TEST).
-prop_base32_iso() ->
-    ?FORALL(Data, binary(),
-        begin
-            Encoded = encode(Data),
-            {ok, Decoded} = decode(Encoded),
-            Data =:= Decoded
-        end).
--endif.

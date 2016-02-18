@@ -41,17 +41,3 @@ shared_secret(SecretKey, PublicKey) ->
 -spec params() -> [non_neg_integer()].
 params() ->
     [?P, ?G].
-
--ifdef(TEST).
-test_keypair() ->
-    #{ secret := S, public := P } = keypair(),
-    {S, P}.
-
-prop_shared_secret() ->
-    ?FORALL({{AS, AP}, {BS, BP}}, {test_keypair(), test_keypair()},
-        begin
-            SharedA = shared_secret(AS, BP),
-            SharedB = shared_secret(BS, AP),
-            SharedA =:= SharedB
-        end).
--endif.

@@ -48,21 +48,6 @@ decode(Base64Data) when is_binary(Base64Data) ->
     end.
 
 -ifdef(TEST).
-prop_base64_iso() ->
-    ?FORALL(Data, binary(),
-        begin
-            Encoded = encode(Data),
-            {ok, Decoded} = decode(Encoded),
-            Data =:= Decoded
-        end).
-
-prop_base64_strip_equal_sign() ->
-    ?FORALL(Data, binary(),
-        begin
-            Encoded = encode(Data),
-            binary:match(Encoded, <<"=">>) =:= nomatch
-        end).
-
 base64_rfc4648_encode_test() ->
     [
         ?assertEqual(encode(<<>>), <<>>),

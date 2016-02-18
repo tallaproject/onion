@@ -53,13 +53,3 @@ decode_base16_binary(Base16Data) when is_binary(Base16Data) ->
         <<A:8/integer, B:8/integer, Rest/binary>> ->
             <<(list_to_integer([A, B], 16)), (decode_base16_binary(Rest))/binary>>
     end.
-
--ifdef(TEST).
-prop_base16_iso() ->
-    ?FORALL(Data, binary(),
-        begin
-            Encoded = encode(Data),
-            {ok, Decoded} = decode(Encoded),
-            Data =:= Decoded
-        end).
--endif.

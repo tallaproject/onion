@@ -5,11 +5,5 @@
 %%%
 
 -ifdef(TEST).
-
 -include_lib("eunit/include/eunit.hrl").
--include_lib("triq/include/triq.hrl").
-
-property_test() ->
-    {timeout, 300, ?_assert(check())}.
-
 -endif.

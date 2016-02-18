@@ -83,12 +83,3 @@ hostname(Min, Max, Prefix, Suffix) ->
                     bytes(BytesRandomLength + (5 - (BytesRandomLength rem 5)))
             end,
     lists:flatten([Prefix, binary_to_list(onion_base32:encode(Bytes)), Suffix]).
-
--ifdef(TEST).
-prop_time_range() ->
-    ?FORALL({Min, Max}, {non_neg_integer(), non_neg_integer()},
-        begin
-            Value = time_range(Min, Min + Max),
-            Min =< Value andalso (Min + Max - 1) >= Value
-        end).
--endif.

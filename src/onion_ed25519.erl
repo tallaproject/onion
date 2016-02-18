@@ -44,17 +44,3 @@ sign(Message, SecretKey) ->
         Message       :: binary().
 verify(SignedMessage, PublicKey) ->
     enacl:sign_open(SignedMessage, PublicKey).
-
--ifdef(TEST).
-test_keypair() ->
-    #{ secret := SecretKey, public := PublicKey } = keypair(),
-    {SecretKey, PublicKey}.
-
-prop_sign_verify() ->
-    ?FORALL({{S, P}, M}, {test_keypair(), binary()},
-       begin
-           SignedMessage = sign(M, S),
-           {ok, M2} = verify(SignedMessage, P),
-           M =:= M2
-       end).
--endif.
