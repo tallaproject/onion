@@ -33,7 +33,6 @@ $ make doc
 <tr><td><a href="https://lab.baconsvin.org/talla/onion/blob/develop/doc/onion_cell.md" class="module">onion_cell</a></td></tr>
 <tr><td><a href="https://lab.baconsvin.org/talla/onion/blob/develop/doc/onion_certs_cell.md" class="module">onion_certs_cell</a></td></tr>
 <tr><td><a href="https://lab.baconsvin.org/talla/onion/blob/develop/doc/onion_config.md" class="module">onion_config</a></td></tr>
-<tr><td><a href="https://lab.baconsvin.org/talla/onion/blob/develop/doc/onion_curve25519.md" class="module">onion_curve25519</a></td></tr>
 <tr><td><a href="https://lab.baconsvin.org/talla/onion/blob/develop/doc/onion_descriptor.md" class="module">onion_descriptor</a></td></tr>
 <tr><td><a href="https://lab.baconsvin.org/talla/onion/blob/develop/doc/onion_dh.md" class="module">onion_dh</a></td></tr>
 <tr><td><a href="https://lab.baconsvin.org/talla/onion/blob/develop/doc/onion_document.md" class="module">onion_document</a></td></tr>
@@ -47,5 +46,6 @@ $ make doc
 <tr><td><a href="https://lab.baconsvin.org/talla/onion/blob/develop/doc/onion_rsa.md" class="module">onion_rsa</a></td></tr>
 <tr><td><a href="https://lab.baconsvin.org/talla/onion/blob/develop/doc/onion_string.md" class="module">onion_string</a></td></tr>
 <tr><td><a href="https://lab.baconsvin.org/talla/onion/blob/develop/doc/onion_time.md" class="module">onion_time</a></td></tr>
+<tr><td><a href="https://lab.baconsvin.org/talla/onion/blob/develop/doc/onion_x25519.md" class="module">onion_x25519</a></td></tr>
 <tr><td><a href="https://lab.baconsvin.org/talla/onion/blob/develop/doc/onion_x509.md" class="module">onion_x509</a></td></tr></table>
 

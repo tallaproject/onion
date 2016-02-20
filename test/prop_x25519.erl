@@ -5,10 +5,10 @@
 %%%
 %%% -----------------------------------------------------------
 %%% @author Alexander Færøy <ahf@0x90.dk>
-%%% @doc Property Tests for onion_curve25519.
+%%% @doc Property Tests for onion_x25519.
 %%% @end
 %%% -----------------------------------------------------------
--module(prop_curve25519).
+-module(prop_x25519).
 
 %% Properties.
 -export([prop_shared_secret/0]).
@@ -19,13 +19,13 @@
 prop_shared_secret() ->
     ?FORALL({{AS, AP}, {BS, BP}}, {test_keypair(), test_keypair()},
         begin
-            SharedA = onion_curve25519:shared_secret(AS, BP),
-            SharedB = onion_curve25519:shared_secret(BS, AP),
+            SharedA = onion_x25519:shared_secret(AS, BP),
+            SharedB = onion_x25519:shared_secret(BS, AP),
             SharedA =:= SharedB
         end).
 
 %% @private
 -spec test_keypair() -> term().
 test_keypair() ->
-    #{ secret := SecretKey, public := PublicKey } = onion_curve25519:keypair(),
+    #{ secret := SecretKey, public := PublicKey } = onion_x25519:keypair(),
     {SecretKey, PublicKey}.

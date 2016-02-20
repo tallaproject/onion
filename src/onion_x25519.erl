@@ -5,11 +5,11 @@
 %%%
 %%% -----------------------------------------------------------
 %%% @author Alexander Færøy <ahf@0x90.dk>
-%%% @doc Curve25519 API
+%%% @doc x25519 Diffie-Hellman API
 %%%
 %%% @end
 %%% -----------------------------------------------------------
--module(onion_curve25519).
+-module(onion_x25519).
 
 %% API.
 -export([keypair/0,
@@ -26,10 +26,17 @@
 
 -type secret_key() :: binary().
 -type public_key() :: binary().
--type keypair()    :: #{ secret => secret_key(), public => public_key() }.
+-type keypair()    :: #{ secret => secret_key(),
+                         public => public_key() }.
 
 -include("onion_test.hrl").
 
+%% @doc Creates a new x25519 Diffie-Hellman keypair.
+%%
+%% Generates and returns a new x25519 Diffie-Hellman keypair. The return value
+%% is a map to avoid using the public key as the secret key and vice versa.
+%%
+%% @end
 -spec keypair() -> KeyPair
     when
         KeyPair :: keypair().
@@ -43,6 +50,12 @@ keypair() ->
 secret_key_to_public_key(SecretKey) when is_binary(SecretKey) ->
     enacl_ext:curve25519_public_key(SecretKey).
 
+%% @doc Computes the shared secret between a SecretKey and PublicKey.
+%%
+%% This function computes the shared secret between a given SecretKey and
+%% PublicKey.
+%%
+%% @end
 -spec shared_secret(SecretKey, PublicKey) -> SharedSecret
     when
         SecretKey    :: secret_key(),
@@ -51,6 +64,12 @@ secret_key_to_public_key(SecretKey) when is_binary(SecretKey) ->
 shared_secret(SecretKey, PublicKey) ->
     enacl_ext:curve25519_shared(SecretKey, PublicKey).
 
+%% @doc Computes the scalar multiplication between SecretKey and BasePoint.
+%%
+%% This function computes the scalar multiplication between a given SecretKey
+%% and a given BasePoint.
+%%
+%% @end
 -spec scalarmult(SecretKey, BasePoint) -> Result
     when
         SecretKey :: secret_key(),
