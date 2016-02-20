@@ -12,11 +12,29 @@
 -module(onion_document).
 
 %% API.
--export([get_item/2,
+-export([encode/1,
+         get_item/2,
          split/2,
          decode/1]).
 
 -include("onion_test.hrl").
+
+%% @doc Encode a given Document into an iolist().
+%%
+%% This function encodes a given Document into an iolist().
+%%
+%% @end
+-spec encode(Document) -> Data
+    when
+        Document  :: [Item],
+        Item      :: {Keyword, Arguments, Objects},
+        Keyword   :: string() | atom() | binary(),
+        Arguments :: [binary()],
+        Objects   :: [Object],
+        Object    :: term(),
+        Data      :: iolist().
+encode(Document) when is_list(Document) ->
+    lists:map(fun encode_document_entry/1, Document).
 
 -spec get_item(Keyword, Document) -> Item | not_found
     when
@@ -119,8 +137,33 @@ keyword(V) when is_atom(V) ->
 keyword(V) when is_list(V) ->
     list_to_binary(V);
 
+keyword(V) when is_integer(V) ->
+    integer_to_binary(V);
+
 keyword(V) when is_binary(V) ->
     V.
+
+%% @private
+-spec encode_document_entry(DocumentEntry) -> iolist()
+    when
+        DocumentEntry :: {Keyword, Arguments, Objects},
+        Keyword   :: string() | atom() | binary(),
+        Arguments :: [binary()],
+        Objects   :: [Object],
+        Object    :: term().
+encode_document_entry({Keyword, Arguments}) ->
+    encode_document_entry({Keyword, Arguments, []});
+
+encode_document_entry({Keyword, Arguments, Objects}) ->
+    [onion_lists:intersperse(<<" ">>, lists:map(fun keyword/1, [keyword(Keyword) | Arguments])), <<"\n">>,
+     lists:map(fun encode_object/1, Objects)].
+
+%% @private
+-spec encode_object(Object) -> iolist()
+    when
+        Object :: term().
+encode_object({Type, Data}) ->
+    [onion_pem:encode(Type, Data)].
 
 -ifdef(TEST).
 decode_basic_test() ->
