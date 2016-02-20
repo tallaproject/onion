@@ -4,7 +4,6 @@
 
 #include <openssl/bn.h>
 #include <openssl/rsa.h>
-#include <openssl/pem.h>
 
 #include "onion_nif_rsa.h"
 
