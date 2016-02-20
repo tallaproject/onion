@@ -51,11 +51,11 @@ encode(ServerDescriptor) ->
     %% Published information.
     Published = maps:get(published, ServerDescriptor),
 
-    %% Fingerprint information.
-    Fingerprint = maps:get(fingerprint, ServerDescriptor),
-
     %% Uptime information.
     Uptime = maps:get(uptime, ServerDescriptor),
+
+    %% Signing Key information.
+    SigningKey = maps:get(signing_key, ServerDescriptor),
 
     %% Onion Key information.
     OnionKey = maps:get(onion_key, ServerDescriptor),
@@ -93,7 +93,7 @@ encode(ServerDescriptor) ->
         {published, [onion_document:encode_datetime(Published)]},
 
         %% "fingerprint" fingerprint
-        {fingerprint, [Fingerprint]},
+        {fingerprint, [onion_binary:fingerprint(sha, SigningKey)]},
 
         %% "uptime" number
         {uptime, [Uptime]},
@@ -105,7 +105,7 @@ encode(ServerDescriptor) ->
         {'ntor-onion-key', [onion_base64:encode(NTorOnionKey)]},
 
         %% "signing-key" NL a public key in PEM format
-        {'signing-key', [], []},
+        {'signing-key', [], [{"RSA PUBLIC KEY", SigningKey}]},
 
         %% "accept" exitpattern
         %% "reject" exitpattern
