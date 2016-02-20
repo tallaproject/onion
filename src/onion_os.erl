@@ -28,6 +28,9 @@ name() ->
         linux ->
             "Linux";
 
+        sunos ->
+            "Solaris";
+
         NameAtom ->
             atom_to_list(NameAtom)
     end.
