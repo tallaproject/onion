@@ -533,8 +533,8 @@ encode_payload(auth_challenge, #{ challenge := Challenge, methods := Methods }) 
                                            <<1:16/integer>>
                                    end
                                end, Methods),
-    MethodsByteCount = iolist_size(EncodedMethods),
-    [Challenge, <<MethodsByteCount:16/integer>>, EncodedMethods];
+    MethodsCount = length(EncodedMethods),
+    [Challenge, <<MethodsCount:16/integer>>, EncodedMethods];
 
 encode_payload(authenticate, #{ auth_type := AuthType, auth := Auth }) ->
     AuthSize = byte_size(Auth),
