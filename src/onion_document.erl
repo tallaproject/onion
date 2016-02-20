@@ -13,6 +13,7 @@
 
 %% API.
 -export([encode/1,
+         encode_datetime/1,
          get_item/2,
          split/2,
          decode/1]).
@@ -35,6 +36,19 @@
         Data      :: iolist().
 encode(Document) when is_list(Document) ->
     lists:map(fun encode_document_entry/1, Document).
+
+%% @doc Encode datetime() to the reprensetation used in a directory document.
+%%
+%% This function encodes a datetime() into Tor's descriptor timestamp format
+%% and returns an string() as result.
+%%
+%% @end
+-spec encode_datetime(Datetime) -> string()
+    when
+        Datetime :: calendar:datetime().
+encode_datetime({{Year, Month, Day}, {Hour, Minute, Second}}) ->
+    onion_string:format("~4..0b-~2..0b-~2..0b ~2..0b:~2..0b:~2..0b",
+                        [Year, Month, Day, Hour, Minute, Second]).
 
 -spec get_item(Keyword, Document) -> Item | not_found
     when
@@ -156,7 +170,10 @@ encode_document_entry({Keyword, Arguments}) ->
 
 encode_document_entry({Keyword, Arguments, Objects}) ->
     [onion_lists:intersperse(<<" ">>, lists:map(fun keyword/1, [keyword(Keyword) | Arguments])), <<"\n">>,
-     lists:map(fun encode_object/1, Objects)].
+     lists:map(fun encode_object/1, Objects)];
+
+encode_document_entry(List) when is_list(List) ->
+    lists:map(fun encode_document_entry/1, List).
 
 %% @private
 -spec encode_object(Object) -> iolist()

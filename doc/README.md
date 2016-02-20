@@ -44,6 +44,7 @@ $ make doc
 <tr><td><a href="onion_protocol.md" class="module">onion_protocol</a></td></tr>
 <tr><td><a href="onion_random.md" class="module">onion_random</a></td></tr>
 <tr><td><a href="onion_rsa.md" class="module">onion_rsa</a></td></tr>
+<tr><td><a href="onion_server_descriptor.md" class="module">onion_server_descriptor</a></td></tr>
 <tr><td><a href="onion_string.md" class="module">onion_string</a></td></tr>
 <tr><td><a href="onion_time.md" class="module">onion_time</a></td></tr>
 <tr><td><a href="onion_x25519.md" class="module">onion_x25519</a></td></tr>
