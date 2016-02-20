@@ -43,6 +43,11 @@
 keypair() ->
     enacl_ext:curve25519_keypair().
 
+%% @doc Creates a PublicKey from a given SecretKey.
+%%
+%% This function creates an x25519 public key from a given x25519 secret key.
+%%
+%% @end
 -spec secret_key_to_public_key(SecretKey) -> PublicKey
     when
         SecretKey :: secret_key(),

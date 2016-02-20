@@ -49,7 +49,7 @@ secret_key() = binary()
 ## Function Index ##
 
 
-<table width="100%" border="1" cellspacing="0" cellpadding="2" summary="function index"><tr><td valign="top"><a href="#keypair-0">keypair/0</a></td><td>Creates a new x25519 Diffie-Hellman keypair.</td></tr><tr><td valign="top"><a href="#scalarmult-2">scalarmult/2</a></td><td>Computes the scalar multiplication between SecretKey and BasePoint.</td></tr><tr><td valign="top"><a href="#secret_key_to_public_key-1">secret_key_to_public_key/1</a></td><td></td></tr><tr><td valign="top"><a href="#shared_secret-2">shared_secret/2</a></td><td>Computes the shared secret between a SecretKey and PublicKey.</td></tr></table>
+<table width="100%" border="1" cellspacing="0" cellpadding="2" summary="function index"><tr><td valign="top"><a href="#keypair-0">keypair/0</a></td><td>Creates a new x25519 Diffie-Hellman keypair.</td></tr><tr><td valign="top"><a href="#scalarmult-2">scalarmult/2</a></td><td>Computes the scalar multiplication between SecretKey and BasePoint.</td></tr><tr><td valign="top"><a href="#secret_key_to_public_key-1">secret_key_to_public_key/1</a></td><td>Creates a PublicKey from a given SecretKey.</td></tr><tr><td valign="top"><a href="#shared_secret-2">shared_secret/2</a></td><td>Computes the shared secret between a SecretKey and PublicKey.</td></tr></table>
 
 
 <a name="functions"></a>
@@ -95,6 +95,10 @@ secret_key_to_public_key(SecretKey) -&gt; PublicKey
 </code></pre>
 
 <ul class="definitions"><li><code>SecretKey = <a href="#type-secret_key">secret_key()</a></code></li><li><code>PublicKey = <a href="#type-public_key">public_key()</a></code></li></ul>
+
+Creates a PublicKey from a given SecretKey.
+
+This function creates an x25519 public key from a given x25519 secret key.
 
 <a name="shared_secret-2"></a>
 
