@@ -38,6 +38,7 @@ $ make doc
 <tr><td><a href="onion_ed25519.md" class="module">onion_ed25519</a></td></tr>
 <tr><td><a href="onion_file.md" class="module">onion_file</a></td></tr>
 <tr><td><a href="onion_lists.md" class="module">onion_lists</a></td></tr>
+<tr><td><a href="onion_math.md" class="module">onion_math</a></td></tr>
 <tr><td><a href="onion_os.md" class="module">onion_os</a></td></tr>
 <tr><td><a href="onion_pem.md" class="module">onion_pem</a></td></tr>
 <tr><td><a href="onion_protocol.md" class="module">onion_protocol</a></td></tr>
