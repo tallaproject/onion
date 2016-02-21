@@ -40,6 +40,7 @@ $ make doc
 <tr><td><a href="https://lab.baconsvin.org/talla/onion/blob/develop/doc/onion_kdf.md" class="module">onion_kdf</a></td></tr>
 <tr><td><a href="https://lab.baconsvin.org/talla/onion/blob/develop/doc/onion_lists.md" class="module">onion_lists</a></td></tr>
 <tr><td><a href="https://lab.baconsvin.org/talla/onion/blob/develop/doc/onion_math.md" class="module">onion_math</a></td></tr>
+<tr><td><a href="https://lab.baconsvin.org/talla/onion/blob/develop/doc/onion_ntor.md" class="module">onion_ntor</a></td></tr>
 <tr><td><a href="https://lab.baconsvin.org/talla/onion/blob/develop/doc/onion_os.md" class="module">onion_os</a></td></tr>
 <tr><td><a href="https://lab.baconsvin.org/talla/onion/blob/develop/doc/onion_pem.md" class="module">onion_pem</a></td></tr>
 <tr><td><a href="https://lab.baconsvin.org/talla/onion/blob/develop/doc/onion_protocol.md" class="module">onion_protocol</a></td></tr>
