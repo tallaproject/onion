@@ -69,7 +69,7 @@ relay_command() = relay_begin | relay_data | relay_end | relay_connected | relay
 ## Function Index ##
 
 
-<table width="100%" border="1" cellspacing="0" cellpadding="2" summary="function index"><tr><td valign="top"><a href="#auth_challenge-2">auth_challenge/2</a></td><td></td></tr><tr><td valign="top"><a href="#authenticate-2">authenticate/2</a></td><td></td></tr><tr><td valign="top"><a href="#authorize-0">authorize/0</a></td><td></td></tr><tr><td valign="top"><a href="#certs-1">certs/1</a></td><td></td></tr><tr><td valign="top"><a href="#create-2">create/2</a></td><td></td></tr><tr><td valign="top"><a href="#create2-2">create2/2</a></td><td></td></tr><tr><td valign="top"><a href="#create_fast-1">create_fast/1</a></td><td></td></tr><tr><td valign="top"><a href="#created-1">created/1</a></td><td></td></tr><tr><td valign="top"><a href="#created2-1">created2/1</a></td><td></td></tr><tr><td valign="top"><a href="#created_fast-2">created_fast/2</a></td><td></td></tr><tr><td valign="top"><a href="#decode-2">decode/2</a></td><td></td></tr><tr><td valign="top"><a href="#destroy-1">destroy/1</a></td><td></td></tr><tr><td valign="top"><a href="#encode-2">encode/2</a></td><td></td></tr><tr><td valign="top"><a href="#netinfo-2">netinfo/2</a></td><td></td></tr><tr><td valign="top"><a href="#netinfo-3">netinfo/3</a></td><td></td></tr><tr><td valign="top"><a href="#padding-0">padding/0</a></td><td></td></tr><tr><td valign="top"><a href="#relay-5">relay/5</a></td><td></td></tr><tr><td valign="top"><a href="#relay_early-1">relay_early/1</a></td><td></td></tr><tr><td valign="top"><a href="#versions-0">versions/0</a></td><td></td></tr><tr><td valign="top"><a href="#vpadding-0">vpadding/0</a></td><td></td></tr></table>
+<table width="100%" border="1" cellspacing="0" cellpadding="2" summary="function index"><tr><td valign="top"><a href="#auth_challenge-2">auth_challenge/2</a></td><td></td></tr><tr><td valign="top"><a href="#authenticate-2">authenticate/2</a></td><td></td></tr><tr><td valign="top"><a href="#authorize-0">authorize/0</a></td><td></td></tr><tr><td valign="top"><a href="#certs-1">certs/1</a></td><td></td></tr><tr><td valign="top"><a href="#create-2">create/2</a></td><td></td></tr><tr><td valign="top"><a href="#create2-2">create2/2</a></td><td></td></tr><tr><td valign="top"><a href="#create_fast-1">create_fast/1</a></td><td></td></tr><tr><td valign="top"><a href="#created-1">created/1</a></td><td></td></tr><tr><td valign="top"><a href="#created2-2">created2/2</a></td><td></td></tr><tr><td valign="top"><a href="#created_fast-2">created_fast/2</a></td><td></td></tr><tr><td valign="top"><a href="#decode-2">decode/2</a></td><td></td></tr><tr><td valign="top"><a href="#destroy-1">destroy/1</a></td><td></td></tr><tr><td valign="top"><a href="#encode-2">encode/2</a></td><td></td></tr><tr><td valign="top"><a href="#netinfo-2">netinfo/2</a></td><td></td></tr><tr><td valign="top"><a href="#netinfo-3">netinfo/3</a></td><td></td></tr><tr><td valign="top"><a href="#padding-0">padding/0</a></td><td></td></tr><tr><td valign="top"><a href="#relay-5">relay/5</a></td><td></td></tr><tr><td valign="top"><a href="#relay_early-1">relay_early/1</a></td><td></td></tr><tr><td valign="top"><a href="#versions-0">versions/0</a></td><td></td></tr><tr><td valign="top"><a href="#vpadding-0">vpadding/0</a></td><td></td></tr></table>
 
 
 <a name="functions"></a>
@@ -155,15 +155,15 @@ created(Data) -&gt; <a href="#type-cell">cell()</a>
 
 <ul class="definitions"><li><code>Data = binary()</code></li></ul>
 
-<a name="created2-1"></a>
+<a name="created2-2"></a>
 
-### created2/1 ###
+### created2/2 ###
 
 <pre><code>
-created2(Data) -&gt; <a href="#type-cell">cell()</a>
+created2(Circuit, Data) -&gt; <a href="#type-cell">cell()</a>
 </code></pre>
 
-<ul class="definitions"><li><code>Data = binary()</code></li></ul>
+<ul class="definitions"><li><code>Circuit = non_neg_integer()</code></li><li><code>Data = binary()</code></li></ul>
 
 <a name="created_fast-2"></a>
 

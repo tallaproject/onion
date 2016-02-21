@@ -24,7 +24,7 @@
          netinfo/3,
          relay_early/1,
          create2/2,
-         created2/1,
+         created2/2,
          vpadding/0,
          certs/1,
          auth_challenge/2,
@@ -190,11 +190,12 @@ relay_early(Data) ->
 create2(Type, Data) ->
     cell(0, create2, #{ type => Type, data => Data }).
 
--spec created2(Data) -> cell()
+-spec created2(Circuit, Data) -> cell()
     when
-        Data :: binary().
-created2(Data) ->
-    cell(0, created2, #{ data => Data }).
+        Circuit :: non_neg_integer(),
+        Data    :: binary().
+created2(Circuit, Data) ->
+    cell(Circuit, created2, #{ data => Data }).
 
 -spec vpadding() -> cell().
 vpadding() ->
