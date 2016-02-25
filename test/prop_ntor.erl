@@ -24,7 +24,6 @@ prop_shared_secret() ->
 
             %% NTorPublicKey and NTorSecretKey of the server.
             NTorPublicKey = maps:get(public, NTorKeyPair),
-            NTorSecretKey = maps:get(secret, NTorKeyPair),
 
             %% The client makes the initial request:
             {<<Fingerprint:20/binary,
