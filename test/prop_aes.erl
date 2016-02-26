@@ -17,11 +17,11 @@
 
 -spec prop_iso() -> term().
 prop_iso() ->
-    ?FORALL({Key, Message}, {binary(128), binary()},
+    ?FORALL({Key, Message}, {binary(16), binary()},
         begin
             AES = onion_aes:init(Key),
             {_, CipherText} = onion_aes:encrypt(AES, Message),
             {_, PlainText}  = onion_aes:decrypt(AES, CipherText),
 
-            CipherText =/= PlainText andalso PlainText =:= Message
+            PlainText =:= Message
         end).
