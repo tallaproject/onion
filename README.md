@@ -26,6 +26,7 @@ $ make doc
 
 
 <table width="100%" border="0" summary="list of modules">
+<tr><td><a href="https://lab.baconsvin.org/talla/onion/blob/develop/doc/onion_aes.md" class="module">onion_aes</a></td></tr>
 <tr><td><a href="https://lab.baconsvin.org/talla/onion/blob/develop/doc/onion_base16.md" class="module">onion_base16</a></td></tr>
 <tr><td><a href="https://lab.baconsvin.org/talla/onion/blob/develop/doc/onion_base32.md" class="module">onion_base32</a></td></tr>
 <tr><td><a href="https://lab.baconsvin.org/talla/onion/blob/develop/doc/onion_base64.md" class="module">onion_base64</a></td></tr>
