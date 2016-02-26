@@ -17,7 +17,7 @@
 
 -spec prop_shared_secret() -> term().
 prop_shared_secret() ->
-    ?FORALL({NTorKeyPair, IDPublicKey}, {onion_x25519:keypair(), binary()},
+    ?FORALL({NTorKeyPair, IDPublicKey, Length}, {onion_x25519:keypair(), binary(), pos_integer()},
         begin
             %% The fingerprint of the server PublicKey.
             Fingerprint = crypto:hash(sha, IDPublicKey),
@@ -37,11 +37,11 @@ prop_shared_secret() ->
             %% The server accepts the handshake and computes its key seed.
             {<<ServerEPublicKey:32/binary,
                ServerAuthData:32/binary>>,
-             ServerKeySeed} = onion_ntor:server_handshake(Fingerprint, NTorKeyPair, ClientEPublicKey),
+             ServerKeySeed} = onion_ntor:server_handshake(Fingerprint, NTorKeyPair, ClientEPublicKey, Length),
 
             %% The client receives a response and computes its key seed.
             {<<ClientAuthData:32/binary>>,
-             ClientKeySeed} = onion_ntor:client_handshake(Fingerprint, NTorPublicKey, ServerEPublicKey, ClientEKeyPair),
+             ClientKeySeed} = onion_ntor:client_handshake(Fingerprint, NTorPublicKey, ServerEPublicKey, ClientEKeyPair, Length),
 
             ServerKeySeed =:= ClientKeySeed andalso ServerAuthData =:= ClientAuthData
         end).
