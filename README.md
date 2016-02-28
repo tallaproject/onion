@@ -46,6 +46,7 @@ $ make doc
 <tr><td><a href="https://lab.baconsvin.org/talla/onion/blob/develop/doc/onion_pem.md" class="module">onion_pem</a></td></tr>
 <tr><td><a href="https://lab.baconsvin.org/talla/onion/blob/develop/doc/onion_protocol.md" class="module">onion_protocol</a></td></tr>
 <tr><td><a href="https://lab.baconsvin.org/talla/onion/blob/develop/doc/onion_random.md" class="module">onion_random</a></td></tr>
+<tr><td><a href="https://lab.baconsvin.org/talla/onion/blob/develop/doc/onion_relay.md" class="module">onion_relay</a></td></tr>
 <tr><td><a href="https://lab.baconsvin.org/talla/onion/blob/develop/doc/onion_rsa.md" class="module">onion_rsa</a></td></tr>
 <tr><td><a href="https://lab.baconsvin.org/talla/onion/blob/develop/doc/onion_server_descriptor.md" class="module">onion_server_descriptor</a></td></tr>
 <tr><td><a href="https://lab.baconsvin.org/talla/onion/blob/develop/doc/onion_string.md" class="module">onion_string</a></td></tr>

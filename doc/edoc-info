@@ -3,6 +3,6 @@
 {modules,[onion_aes,onion_base16,onion_base32,onion_base64,onion_binary,
           onion_cell,onion_certs_cell,onion_config,onion_dh,onion_document,
           onion_ed25519,onion_file,onion_kdf,onion_lists,onion_math,
-          onion_ntor,onion_os,onion_pem,onion_protocol,onion_random,onion_rsa,
-          onion_server_descriptor,onion_string,onion_time,onion_x25519,
-          onion_x509]}.
+          onion_ntor,onion_os,onion_pem,onion_protocol,onion_random,
+          onion_relay,onion_rsa,onion_server_descriptor,onion_string,
+          onion_time,onion_x25519,onion_x509]}.
