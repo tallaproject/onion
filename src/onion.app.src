@@ -4,14 +4,14 @@
     {modules, []},
     {registered, []},
     {applications, [
-        kernel,
-        stdlib,
+        base32,
         crypto,
+        enacl,
+        gproc,
+        kernel,
         public_key,
         ssl,
-        enacl,
-        base32,
-        gproc
+        stdlib
     ]}
 ]}.
 
