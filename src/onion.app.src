@@ -8,6 +8,7 @@
         crypto,
         enacl,
         gproc,
+        inet_cidr,
         kernel,
         public_key,
         ssl,

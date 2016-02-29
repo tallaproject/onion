@@ -9,4 +9,8 @@
  {<<"gproc">>,
   {git,"https://github.com/uwiger/gproc.git",
        {ref,"85d8dddf2b04690cee051994b40bfa45925f9e36"}},
+  0},
+ {<<"inet_cidr">>,
+  {git,"https://github.com/benoitc/inet_cidr.git",
+       {ref,"1294072ab26224f4fbef70de006aadf25228a35d"}},
   0}].
