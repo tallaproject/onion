@@ -22,6 +22,7 @@ prop_base64_iso() ->
     ?FORALL(Data, binary(),
         begin
             Encoded = onion_base64:encode(Data),
+            true = onion_base64:valid(Encoded),
             {ok, Decoded} = onion_base64:decode(Encoded),
             Data =:= Decoded
         end).
