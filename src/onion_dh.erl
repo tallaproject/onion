@@ -28,7 +28,7 @@
               keypair/0]).
 
 -type secret_key() :: crypto:dh_private().
--type public_key() :: crypto_dh:public().
+-type public_key() :: crypto:dh_public().
 -type keypair()    :: #{ secret => secret_key(),
                          public => public_key() }.
 
