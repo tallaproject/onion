@@ -20,6 +20,7 @@ prop_base32_iso() ->
     ?FORALL(Data, binary(),
         begin
             Encoded = onion_base32:encode(Data),
+            true = onion_base32:valid(Encoded),
             {ok, Decoded} = onion_base32:decode(Encoded),
             Data =:= Decoded
         end).
