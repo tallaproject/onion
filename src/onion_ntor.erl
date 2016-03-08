@@ -95,15 +95,15 @@ server_handshake(ServerIDKeyHash, ServerNTorOnionKeyPair, ClientEphemeralPublicK
 %% us to test the function in a deterministic way.
 %%
 %% @end
--spec server_handshake(ServerIDKeyHash, ServerNTorOnionKeyPair, ClientEphemeralPublicKey, Length, ServerEphemeralKeyPair) -> {Data, Key}
+-spec server_handshake(ServerIDKeyHash, ServerNTorOnionKeyPair, ClientEphemeralPublicKey, Length, ServerEphemeralKeyPair) -> {Response, SharedSecret}
     when
         ServerIDKeyHash          :: binary(),
         ServerNTorOnionKeyPair   :: onion_x25519:keypair(),
         ClientEphemeralPublicKey :: onion_x25519:public_key(),
         ServerEphemeralKeyPair   :: onion_x25519:keypair(),
         Length                   :: non_neg_integer(),
-        Data                     :: binary(),
-        Key                      :: binary().
+        Response                 :: binary(),
+        SharedSecret             :: binary().
 server_handshake(ServerIDKeyHash, ServerNTorOnionKeyPair, ClientEphemeralPublicKey, Length, ServerEphemeralKeyPair) ->
     #{ public := ServerEphemeralPublicKey, secret := ServerEphemeralSecretKey } = ServerEphemeralKeyPair,
     #{ public := ServerNTorOnionPublicKey, secret := ServerNTorOnionSecretKey } = ServerNTorOnionKeyPair,
@@ -125,7 +125,7 @@ server_handshake(ServerIDKeyHash, ServerNTorOnionKeyPair, ClientEphemeralPublicK
 %% message that was send from the server to finalize the handshake.
 %%
 %% @end
--spec client_handshake(ServerIDKeyHash, ServerNTorOnionPublicKey, ServerEphemeralPublicKey, ClientEphemeralKeyPair, Length) -> {Auth, Key}
+-spec client_handshake(ServerIDKeyHash, ServerNTorOnionPublicKey, ServerEphemeralPublicKey, ClientEphemeralKeyPair, Length) -> {Auth, SharedSecret}
     when
         ServerIDKeyHash :: binary(),
         ServerNTorOnionPublicKey :: onion_x25519:public_key(),
@@ -133,7 +133,7 @@ server_handshake(ServerIDKeyHash, ServerNTorOnionKeyPair, ClientEphemeralPublicK
         ClientEphemeralKeyPair   :: onion_x25519:keypair(),
         Length                   :: non_neg_integer(),
         Auth                     :: binary(),
-        Key                      :: binary().
+        SharedSecret             :: binary().
 client_handshake(ServerIDKeyHash, ServerNTorOnionPublicKey, ServerEphemeralPublicKey, ClientEphemeralKeyPair, Length) ->
     #{ public := ClientEphemeralPublicKey, secret := ClientEphemeralSecretKey } = ClientEphemeralKeyPair,
 

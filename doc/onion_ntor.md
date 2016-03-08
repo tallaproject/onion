@@ -30,10 +30,10 @@ For information about the NTor handshake, see tor-spec.txt, section 5.1.4.
 ### client_handshake/5 ###
 
 <pre><code>
-client_handshake(ServerIDKeyHash, ServerNTorOnionPublicKey, ServerEphemeralPublicKey, ClientEphemeralKeyPair, Length) -&gt; {Auth, Key}
+client_handshake(ServerIDKeyHash, ServerNTorOnionPublicKey, ServerEphemeralPublicKey, ClientEphemeralKeyPair, Length) -&gt; {Auth, SharedSecret}
 </code></pre>
 
-<ul class="definitions"><li><code>ServerIDKeyHash = binary()</code></li><li><code>ServerNTorOnionPublicKey = <a href="onion_x25519.md#type-public_key">onion_x25519:public_key()</a></code></li><li><code>ServerEphemeralPublicKey = <a href="onion_x25519.md#type-public_key">onion_x25519:public_key()</a></code></li><li><code>ClientEphemeralKeyPair = <a href="onion_x25519.md#type-keypair">onion_x25519:keypair()</a></code></li><li><code>Length = non_neg_integer()</code></li><li><code>Auth = binary()</code></li><li><code>Key = binary()</code></li></ul>
+<ul class="definitions"><li><code>ServerIDKeyHash = binary()</code></li><li><code>ServerNTorOnionPublicKey = <a href="onion_x25519.md#type-public_key">onion_x25519:public_key()</a></code></li><li><code>ServerEphemeralPublicKey = <a href="onion_x25519.md#type-public_key">onion_x25519:public_key()</a></code></li><li><code>ClientEphemeralKeyPair = <a href="onion_x25519.md#type-keypair">onion_x25519:keypair()</a></code></li><li><code>Length = non_neg_integer()</code></li><li><code>Auth = binary()</code></li><li><code>SharedSecret = binary()</code></li></ul>
 
 Compute the shared secret.
 
@@ -98,10 +98,10 @@ to the client for the client to finalize the handshake.
 ### server_handshake/5 ###
 
 <pre><code>
-server_handshake(ServerIDKeyHash, ServerNTorOnionKeyPair, ClientEphemeralPublicKey, Length, ServerEphemeralKeyPair) -&gt; {Data, Key}
+server_handshake(ServerIDKeyHash, ServerNTorOnionKeyPair, ClientEphemeralPublicKey, Length, ServerEphemeralKeyPair) -&gt; {Response, SharedSecret}
 </code></pre>
 
-<ul class="definitions"><li><code>ServerIDKeyHash = binary()</code></li><li><code>ServerNTorOnionKeyPair = <a href="onion_x25519.md#type-keypair">onion_x25519:keypair()</a></code></li><li><code>ClientEphemeralPublicKey = <a href="onion_x25519.md#type-public_key">onion_x25519:public_key()</a></code></li><li><code>ServerEphemeralKeyPair = <a href="onion_x25519.md#type-keypair">onion_x25519:keypair()</a></code></li><li><code>Length = non_neg_integer()</code></li><li><code>Data = binary()</code></li><li><code>Key = binary()</code></li></ul>
+<ul class="definitions"><li><code>ServerIDKeyHash = binary()</code></li><li><code>ServerNTorOnionKeyPair = <a href="onion_x25519.md#type-keypair">onion_x25519:keypair()</a></code></li><li><code>ClientEphemeralPublicKey = <a href="onion_x25519.md#type-public_key">onion_x25519:public_key()</a></code></li><li><code>ServerEphemeralKeyPair = <a href="onion_x25519.md#type-keypair">onion_x25519:keypair()</a></code></li><li><code>Length = non_neg_integer()</code></li><li><code>Response = binary()</code></li><li><code>SharedSecret = binary()</code></li></ul>
 
 Compute shared secret and client response from initial handshake message from the client.
 
