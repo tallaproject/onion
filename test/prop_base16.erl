@@ -20,6 +20,7 @@ prop_base16_iso() ->
     ?FORALL(Data, binary(),
         begin
             Encoded = onion_base16:encode(Data),
+            true = onion_base16:valid(Encoded),
             {ok, Decoded} = onion_base16:decode(Encoded),
             Data =:= Decoded
         end).
