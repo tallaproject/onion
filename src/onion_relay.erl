@@ -12,9 +12,19 @@
 -module(onion_relay).
 
 %% API.
--export([verify_digest/2]).
+-export([verify_digest/2,
+
+         valid_nickname/1,
+         valid_relay_fingerprint/1,
+         valid_nickname_or_relay_fingerprint/1
+        ]).
 
 -include("onion_test.hrl").
+
+-define(NICKNAME_MAX_LENGTH, 19).
+-define(NICKNAME_ALPHABET, lists:seq($0, $9) ++
+                           lists:seq($a, $z) ++
+                           lists:seq($A, $Z)).
 
 -spec verify_digest(Context, Data) -> {ok, NewContext} | {error, Reason}
     when
@@ -31,6 +41,45 @@ verify_digest(Context, Data) ->
         _ ->
             {error, insufficient_data}
     end.
+
+-spec valid_nickname(Nickname) -> boolean()
+    when
+        Nickname :: string().
+valid_nickname(Nickname) ->
+    Length = length(Nickname),
+    Length > 0 andalso
+        Length =< ?NICKNAME_MAX_LENGTH andalso
+        onion_string:valid(Nickname, ?NICKNAME_ALPHABET).
+
+-spec valid_relay_fingerprint(Fingerprint) -> boolean()
+    when
+        Fingerprint :: string().
+valid_relay_fingerprint([$$ | Fingerprint]) ->
+    valid_relay_fingerprint(Fingerprint);
+
+valid_relay_fingerprint(Fingerprint) when length(Fingerprint) < 40 ->
+    false;
+
+valid_relay_fingerprint(Fingerprint) ->
+    case lists:split(40, Fingerprint) of
+        {ID, []} ->
+            onion_base16:valid(ID);
+
+        {ID, [$~ | Nickname]} ->
+            onion_base16:valid(ID) andalso valid_nickname(Nickname);
+
+        {ID, [$= | Nickname]} ->
+            onion_base16:valid(ID) andalso valid_nickname(Nickname);
+
+        _ ->
+            false
+    end.
+
+-spec valid_nickname_or_relay_fingerprint(String) -> boolean()
+    when
+        String :: string().
+valid_nickname_or_relay_fingerprint(String) ->
+    valid_nickname(String) orelse valid_relay_fingerprint(String).
 
 %% @private
 -spec do_verify_digest(Context, Data) -> {ok, NewContext} | {error, Reason}
@@ -88,6 +137,42 @@ verify_digest_test() ->
         ?assertMatch({ok, _}, verify_digest(Hash, Data)),
         ?assertMatch({error, _}, verify_digest(Hash, <<1, Data/binary>>)),
         ?assertMatch({error, _}, verify_digest(Hash, <<Data/binary, 1>>))
+    ].
+
+valid_nickname_test() ->
+    [
+        ?assert(valid_nickname("a")),
+        ?assert(valid_nickname("abcdefghijklmnopqrs"))
+    ].
+
+invalid_nickname_test() ->
+    [
+        ?assertNot(valid_nickname("")),
+        ?assertNot(valid_nickname("abcdefghijklmnopqrst")),
+        ?assertNot(valid_nickname("hyphen-")),
+        ?assertNot(valid_nickname("$AAAAAAAA01234AAAAAAAAAAAAAAAAAAAAAAAAAAA"))
+    ].
+
+valid_nickname_or_relay_fingerprint_test() ->
+    [
+        ?assert(valid_nickname_or_relay_fingerprint("$AAAAAAAA01234AAAAAAAAAAAAAAAAAAAAAAAAAAA")),
+        ?assert(valid_nickname_or_relay_fingerprint("$AAAAAAAA01234AAAAAAAAAAAAAAAAAAAAAAAAAAA=fred")),
+        ?assert(valid_nickname_or_relay_fingerprint("xyzzy")),
+        ?assert(valid_nickname_or_relay_fingerprint("abcdefghijklmnopqrs"))
+    ].
+
+invalid_nickname_or_relay_fingerprint_test() ->
+    [
+        ?assertNot(valid_nickname_or_relay_fingerprint("$AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")),
+        ?assertNot(valid_nickname_or_relay_fingerprint("$AAAAAAzAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")),
+        ?assertNot(valid_nickname_or_relay_fingerprint("$AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")),
+        ?assertNot(valid_nickname_or_relay_fingerprint("$AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=fred")),
+        ?assertNot(valid_nickname_or_relay_fingerprint("$AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=")),
+        ?assertNot(valid_nickname_or_relay_fingerprint("$AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA~")),
+        ?assertNot(valid_nickname_or_relay_fingerprint("$AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA~hyphen-")),
+        ?assertNot(valid_nickname_or_relay_fingerprint("$AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA~abcdefghijklmnoppqrst")),
+        ?assertNot(valid_nickname_or_relay_fingerprint("$AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA!")),
+        ?assertNot(valid_nickname_or_relay_fingerprint("abcdefghijklmnopqrst"))
     ].
 
 -endif.
