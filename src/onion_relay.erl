@@ -139,6 +139,11 @@ verify_digest_test() ->
         ?assertMatch({error, _}, verify_digest(Hash, <<Data/binary, 1>>))
     ].
 
+%% The nickname tests below are taken from src/test/test_dir.c from Tor, which
+%% is:
+%%    Copyright (c) 2001-2004, Roger Dingledine.
+%%    Copyright (c) 2004-2006, Roger Dingledine, Nick Mathewson.
+%%    Copyright (c) 2007-2016, The Tor Project, Inc.
 valid_nickname_test() ->
     [
         ?assert(valid_nickname("a")),
