@@ -249,14 +249,15 @@ client_handshake_test() ->
                                               "4ce6b76a222ae4b8ed04681287e95731d701302e8b87e3b7ef823c0d62aa0dbc"]),
     {Check, Shared}          = client_handshake(ServerID, ServerNTorPublicKey, ServerEphemeralPublicKey, ClientEphemeralKeyPair, 72),
     <<ServerPublicKey:32/binary,
-      CheckValue:32/binary>> = base16_decode(["3afbc0ae70195b88b30a77186372a48978b671bb0ed6b67de7ab33e04c5b9c02",
-                                              "4ce6b76a222ae4b8ed04681287e95731d701302e8b87e3b7ef823c0d62aa0dbc"]),
+      CheckValue:32/binary>> = ServerHandshakeCheck = base16_decode(["3afbc0ae70195b88b30a77186372a48978b671bb0ed6b67de7ab33e04c5b9c02",
+                                                                     "4ce6b76a222ae4b8ed04681287e95731d701302e8b87e3b7ef823c0d62aa0dbc"]),
     [
         ?assertEqual(Check, CheckValue),
         ?assertEqual(ServerPublicKey, ServerEphemeralPublicKey),
         ?assertEqual(Shared,
                      base16_decode(["9b5d4c0eb97e5dd285fdfe07b4ff915a12a034d3f39b49c539901f6840772312f3e0e421",
-                                    "0569be8aba28bdbbc83db9a1d48ca2d39e10a015639c0762b934b47280e7e395b1f75f6a"]))
+                                    "0569be8aba28bdbbc83db9a1d48ca2d39e10a015639c0762b934b47280e7e395b1f75f6a"])),
+        ?assertEqual(ServerHandshake, ServerHandshakeCheck)
     ].
 
 handshake_test() ->
