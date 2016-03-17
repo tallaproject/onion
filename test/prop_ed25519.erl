@@ -19,9 +19,8 @@
 prop_sign_verify() ->
     ?FORALL({{S, P}, M}, {test_keypair(), binary()},
        begin
-           SignedMessage = onion_ed25519:sign(M, S),
-           {ok, M2} = onion_ed25519:verify(SignedMessage, P),
-           M =:= M2
+           Signature = onion_ed25519:sign(M, S),
+           onion_ed25519:verify(Signature, M, P)
        end).
 
 %% @private
