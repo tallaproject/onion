@@ -41,7 +41,7 @@ keypair() = #{secret =&gt; <a href="#type-secret_key">secret_key()</a>, public =
 
 
 <pre><code>
-public_key() = <a href="crypto_dh.md#type-public">crypto_dh:public()</a>
+public_key() = <a href="crypto.md#type-dh_public">crypto:dh_public()</a>
 </code></pre>
 
 
