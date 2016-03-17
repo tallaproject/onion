@@ -4,7 +4,7 @@
   0},
  {<<"enacl">>,
   {git,"git@lab.baconsvin.org:talla/enacl.git",
-       {ref,"b152533af870a9b39e47dace77a491c98d483a2c"}},
+       {ref,"620f434d8020b283f7035c5f4380eb01edfb8831"}},
   0},
  {<<"gproc">>,
   {git,"https://github.com/uwiger/gproc.git",
