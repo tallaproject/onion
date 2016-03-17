@@ -12,7 +12,7 @@ dialyzer:
 	@$(REBAR) dialyzer
 
 check:
-	@$(REBAR) do eunit -v, proper -v
+	@$(REBAR) do eunit -v, ct -v, proper -v
 
 shell:
 	@$(REBAR) shell
