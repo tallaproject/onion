@@ -88,7 +88,7 @@ keypair(Bits) ->
         Reason         :: term().
 keypair(Bits, PublicExponent) ->
     case onion_nif:rsa_generate_private_key(Bits, PublicExponent) of
-        SecretKeyDER ->
+        SecretKeyDER when is_binary(SecretKeyDER) ->
             {ok, SecretKey} = der_decode_secret_key(SecretKeyDER),
             {ok, #{ secret => SecretKey,
                     public => secret_key_to_public_key(SecretKey) }};
