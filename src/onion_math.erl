@@ -11,12 +11,15 @@
 -module(onion_math).
 
 %% API.
--export([ceil/1]).
+-export([ceil/1,
+         floor/1,
+         pow/2,
+         mod/2
+        ]).
 
 -include("onion_test.hrl").
 
 %% @doc Round a given number upwards towards to the nearest integer.
-%% @end
 -spec ceil(Value) -> integer()
     when
         Value :: number().
@@ -33,6 +36,39 @@ ceil(X) ->
             V + 1
     end.
 
+%% @doc Round a given number downwards towards the nearest integer.
+-spec floor(Value) -> integer()
+    when
+        Value :: number().
+floor(X) when X < 0 ->
+    V = trunc(X),
+    case X - V == 0 of
+        true ->
+            V;
+
+        false ->
+            V - 1
+    end;
+
+floor(X) ->
+    trunc(X).
+
+%% @doc Return X^N.
+-spec pow(X, N) -> integer()
+    when
+        X :: integer(),
+        N :: integer().
+pow(X, N) ->
+    trunc(math:pow(X, N)).
+
+%% @doc Return X mod Y.
+-spec mod(X, Y) -> integer()
+    when
+        X :: integer(),
+        Y :: integer().
+mod(X, Y) ->
+    trunc(X rem Y).
+
 -ifdef(TEST).
 ceil_test() ->
     [
@@ -42,6 +78,31 @@ ceil_test() ->
         ?assertEqual(ceil(2.00), 2),
         ?assertEqual(ceil(2.5), 3),
         ?assertEqual(ceil(0.1), 1)
+    ].
+
+floor_test() ->
+    [
+        ?assertEqual(floor(-100.231), -101),
+        ?assertEqual(floor(-1.0001), -2),
+        ?assertEqual(floor(0.5), 0),
+        ?assertEqual(floor(2.00), 2),
+        ?assertEqual(floor(2.5), 2),
+        ?assertEqual(floor(0.1), 0)
+    ].
+
+pow_test() ->
+    [
+        ?assertEqual(pow(1, 0), 1),
+        ?assertEqual(pow(2, 2), 4),
+        ?assertEqual(pow(2, 255), 57896044618658097711785492504343953926634992332820282019728792003956564819968)
+    ].
+
+mod_test() ->
+    [
+        ?assertEqual(mod(2, 2), 0),
+        ?assertEqual(mod(2, 4), 2),
+        ?assertEqual(mod(2, 3), 2),
+        ?assertEqual(mod(3, 9), 3)
     ].
 
 -endif.
