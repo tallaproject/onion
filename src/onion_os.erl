@@ -12,13 +12,16 @@
 -module(onion_os).
 
 %% API.
--export([name/0]).
+-export([name/0,
+         type/0
+        ]).
+
+-include("onion_test.hrl").
 
 %% @doc Get the name of the running operating system.
 -spec name() -> string().
 name() ->
-    {_, NameAtom} = os:type(),
-    case NameAtom of
+    case ?MODULE:type() of
         darwin ->
             "Darwin";
 
@@ -34,3 +37,12 @@ name() ->
         NameAtom ->
             atom_to_list(NameAtom)
     end.
+
+%% @doc Get the type of the running operating system.
+-spec type() -> atom().
+type() ->
+    {_, Type} = os:type(),
+    Type.
+
+-ifdef(TEST).
+-endif.
