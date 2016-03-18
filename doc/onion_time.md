@@ -14,37 +14,43 @@ __Authors:__ Alexander Færøy ([`ahf@0x90.dk`](mailto:ahf@0x90.dk)).
 ## Function Index ##
 
 
-<table width="100%" border="1" cellspacing="0" cellpadding="2" summary="function index"><tr><td valign="top"><a href="#from_unix_epoch-1">from_unix_epoch/1</a></td><td></td></tr><tr><td valign="top"><a href="#to_unix_epoch-1">to_unix_epoch/1</a></td><td></td></tr><tr><td valign="top"><a href="#unix_epoch-0">unix_epoch/0</a></td><td></td></tr></table>
+<table width="100%" border="1" cellspacing="0" cellpadding="2" summary="function index"><tr><td valign="top"><a href="#epoch-0">epoch/0</a></td><td>Get current UNIX epoch.</td></tr><tr><td valign="top"><a href="#from_epoch-1">from_epoch/1</a></td><td>Convert UNIX epoch to calendar:datetime().</td></tr><tr><td valign="top"><a href="#to_epoch-1">to_epoch/1</a></td><td>Convert calendar:datetime() to UNIX epoch.</td></tr></table>
 
 
 <a name="functions"></a>
 
 ## Function Details ##
 
-<a name="from_unix_epoch-1"></a>
+<a name="epoch-0"></a>
 
-### from_unix_epoch/1 ###
+### epoch/0 ###
 
 <pre><code>
-from_unix_epoch(Timestamp::non_neg_integer()) -&gt; <a href="calendar.md#type-datetime">calendar:datetime()</a>
+epoch() -&gt; non_neg_integer()
 </code></pre>
 <br />
 
-<a name="to_unix_epoch-1"></a>
+Get current UNIX epoch.
 
-### to_unix_epoch/1 ###
+<a name="from_epoch-1"></a>
+
+### from_epoch/1 ###
 
 <pre><code>
-to_unix_epoch(Now::<a href="calendar.md#type-datetime">calendar:datetime()</a>) -&gt; non_neg_integer()
+from_epoch(Timestamp::non_neg_integer()) -&gt; <a href="calendar.md#type-datetime">calendar:datetime()</a>
 </code></pre>
 <br />
 
-<a name="unix_epoch-0"></a>
+Convert UNIX epoch to calendar:datetime().
 
-### unix_epoch/0 ###
+<a name="to_epoch-1"></a>
+
+### to_epoch/1 ###
 
 <pre><code>
-unix_epoch() -&gt; non_neg_integer()
+to_epoch(Now::<a href="calendar.md#type-datetime">calendar:datetime()</a>) -&gt; non_neg_integer()
 </code></pre>
 <br />
+
+Convert calendar:datetime() to UNIX epoch.
 

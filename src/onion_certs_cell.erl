@@ -20,16 +20,16 @@
         PublicKey :: public_key:der_encoded().
 validate_server(CertsCell, _PublicKey) ->
     try
-        Now = onion_time:unix_epoch(),
+        Now = onion_time:epoch(),
 
         LinkCertificate = type_find(1, CertsCell),
         IDCertificate = type_find(2, CertsCell),
 
-        LinkNotBefore = onion_time:to_unix_epoch(onion_x509:not_before(LinkCertificate)),
-        LinkNotAfter  = onion_time:to_unix_epoch(onion_x509:not_after(LinkCertificate)),
+        LinkNotBefore = onion_time:to_epoch(onion_x509:not_before(LinkCertificate)),
+        LinkNotAfter  = onion_time:to_epoch(onion_x509:not_after(LinkCertificate)),
 
-        IDNotBefore = onion_time:to_unix_epoch(onion_x509:not_before(IDCertificate)),
-        IDNotAfter  = onion_time:to_unix_epoch(onion_x509:not_after(IDCertificate)),
+        IDNotBefore = onion_time:to_epoch(onion_x509:not_before(IDCertificate)),
+        IDNotAfter  = onion_time:to_epoch(onion_x509:not_after(IDCertificate)),
 
         {ok, _LinkPublicKey} = onion_x509:public_key(LinkCertificate),
         {ok, IDPublicKey}    = onion_x509:public_key(IDCertificate),

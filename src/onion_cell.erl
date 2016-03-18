@@ -164,7 +164,7 @@ versions() ->
         TargetAddress   :: inet:ip_address(),
         SourceAddresses :: [inet:ip_address()].
 netinfo(TargetAddress, SourceAddresses) ->
-    netinfo(onion_time:unix_epoch(), TargetAddress, SourceAddresses).
+    netinfo(onion_time:epoch(), TargetAddress, SourceAddresses).
 
 -spec netinfo(Timestamp, TargetAddress, SourceAddresses) -> cell()
     when
