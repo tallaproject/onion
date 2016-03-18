@@ -204,10 +204,6 @@ hmac(Key, Data) ->
     crypto:hmac(sha256, Key, Data).
 
 -ifdef(TEST).
-base16_decode(Data) ->
-    {ok, DecodedData} = onion_base16:decode(iolist_to_binary(Data)),
-    DecodedData.
-
 create_test() ->
     ServerID               = <<"iToldYouAboutStairs.">>,
     ServerNTorPublicKey    = base16_decode("122fcc3441833e6240940c0a695dcfab70bcd4ce81f3a2d880ca66b55a7f9056"),

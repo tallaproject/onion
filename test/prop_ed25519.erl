@@ -13,7 +13,7 @@
 %% Properties.
 -export([prop_sign_verify/0]).
 
--include_lib("proper/include/proper.hrl").
+-include_lib("onion/include/onion_test.hrl").
 
 -spec prop_sign_verify() -> term().
 prop_sign_verify() ->

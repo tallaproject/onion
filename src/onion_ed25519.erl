@@ -75,10 +75,6 @@ verify(Signature, Message, PublicKey) ->
     end.
 
 -ifdef(TEST).
-base16_decode(V) ->
-    {ok, Data} = onion_base16:decode(iolist_to_binary(V)),
-    Data.
-
 nacl_empty_test() ->
     SecretKey = base16_decode(["9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60",
                                "d75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a"]),

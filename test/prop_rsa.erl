@@ -19,7 +19,7 @@
         ]).
 
 -include_lib("public_key/include/public_key.hrl").
--include_lib("proper/include/proper.hrl").
+-include_lib("onion/include/onion_test.hrl").
 
 -spec prop_bit_size() -> term().
 prop_bit_size() ->

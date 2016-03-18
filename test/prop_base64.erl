@@ -15,7 +15,7 @@
          prop_base64_strip_equal_sign/0
         ]).
 
--include_lib("proper/include/proper.hrl").
+-include_lib("onion/include/onion_test.hrl").
 
 -spec prop_base64_iso() -> term().
 prop_base64_iso() ->

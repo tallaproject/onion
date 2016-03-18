@@ -70,10 +70,6 @@ hkdf_hmac(Key, Data) ->
     crypto:hmac(sha256, Key, Data).
 
 -ifdef(TEST).
-base16_decode(Data) ->
-    {ok, DecodedData} = onion_base16:decode(iolist_to_binary(Data)),
-    DecodedData.
-
 hkdf_tor_test() ->
     %% Taken from test_crypto_hkdf_sha256() in tor/src/test/test_crypto.c.
     Salt   = <<"ntor-curve25519-sha256-1:key_extract">>,

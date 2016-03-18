@@ -13,7 +13,7 @@
 %% Properties.
 -export([prop_time_range/0]).
 
--include_lib("proper/include/proper.hrl").
+-include_lib("onion/include/onion_test.hrl").
 
 -spec prop_time_range() -> term().
 prop_time_range() ->

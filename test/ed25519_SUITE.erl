@@ -22,7 +22,7 @@
          end_per_testcase/2
         ]).
 
--include_lib("common_test/include/ct.hrl").
+-include_lib("onion/include/onion_test.hrl").
 
 all() ->
     [{group, basic_group}].
@@ -57,12 +57,12 @@ check_test_vectors([]) ->
 check_test_vectors([Line | Rest]) ->
     [A, B, C, D] = binary:split(Line, <<":">>, [global, trim]),
 
-    {ok, <<SecretKey:64/binary>>} = onion_base16:decode(A),
-    {ok, <<PublicKey:32/binary>>} = onion_base16:decode(B),
+    <<SecretKey:64/binary>> = onion_test:base16_decode(A),
+    <<PublicKey:32/binary>> = onion_test:base16_decode(B),
 
-    {ok, Message}   = onion_base16:decode(C),
+    Message = onion_test:base16_decode(C),
 
-    {ok, <<Signature:64/binary, Message/binary>>} = onion_base16:decode(D),
+    <<Signature:64/binary, Message/binary>> = onion_test:base16_decode(D),
 
     true = onion_ed25519:verify(Signature, Message, PublicKey),
     Signature = onion_ed25519:sign(Message, SecretKey),
