@@ -49,7 +49,7 @@ secret_key() = binary()
 ## Function Index ##
 
 
-<table width="100%" border="1" cellspacing="0" cellpadding="2" summary="function index"><tr><td valign="top"><a href="#keypair-0">keypair/0</a></td><td>Creates a new Ed25519 keypair.</td></tr><tr><td valign="top"><a href="#sign-2">sign/2</a></td><td>Sign a given Message using a given SecretKey.</td></tr><tr><td valign="top"><a href="#verify-3">verify/3</a></td><td>Verify a Signature of a Message using the PublicKey.</td></tr></table>
+<table width="100%" border="1" cellspacing="0" cellpadding="2" summary="function index"><tr><td valign="top"><a href="#keypair-0">keypair/0</a></td><td>Creates a new Ed25519 keypair.</td></tr><tr><td valign="top"><a href="#public_key_from_x25519_public_key-2">public_key_from_x25519_public_key/2</a></td><td>Return the matching Ed25519 public key from an x25519 public key.</td></tr><tr><td valign="top"><a href="#sign-2">sign/2</a></td><td>Sign a given Message using a given SecretKey.</td></tr><tr><td valign="top"><a href="#verify-3">verify/3</a></td><td>Verify a Signature of a Message using the PublicKey.</td></tr></table>
 
 
 <a name="functions"></a>
@@ -70,6 +70,18 @@ Creates a new Ed25519 keypair.
 
 Generates and returns a new Ed25519 keypair. The return value is a map to
 avoid using the public key as the secret key and vice versa.
+
+<a name="public_key_from_x25519_public_key-2"></a>
+
+### public_key_from_x25519_public_key/2 ###
+
+<pre><code>
+public_key_from_x25519_public_key(X25519PublicKey, SignBit) -&gt; Ed25519PublicKey
+</code></pre>
+
+<ul class="definitions"><li><code>X25519PublicKey = <a href="onion_x25519.md#type-public_key">onion_x25519:public_key()</a></code></li><li><code>SignBit = 0 | 1</code></li><li><code>Ed25519PublicKey = <a href="#type-public_key">public_key()</a></code></li></ul>
+
+Return the matching Ed25519 public key from an x25519 public key.
 
 <a name="sign-2"></a>
 

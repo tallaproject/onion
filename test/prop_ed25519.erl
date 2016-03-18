@@ -11,9 +11,28 @@
 -module(prop_ed25519).
 
 %% Properties.
--export([prop_sign_verify/0]).
+-export([prop_point_on_curve/0,
+         prop_point_coding_iso/0,
+         prop_sign_verify/0
+        ]).
 
 -include_lib("onion/include/onion_test.hrl").
+
+-spec prop_point_on_curve() -> term().
+prop_point_on_curve() ->
+    ?FORALL({_, PublicKey}, test_keypair(),
+        begin
+            Point = onion_ed25519:point_decode(PublicKey),
+            onion_ed25519:point_on_curve(Point)
+        end).
+
+-spec prop_point_coding_iso() -> term().
+prop_point_coding_iso() ->
+    ?FORALL({_, PublicKey}, test_keypair(),
+        begin
+            Point = onion_ed25519:point_decode(PublicKey),
+            PublicKey =:= onion_ed25519:point_encode(Point)
+        end).
 
 -spec prop_sign_verify() -> term().
 prop_sign_verify() ->
