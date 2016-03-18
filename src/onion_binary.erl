@@ -17,6 +17,9 @@
 %% API.
 -export([trim/2,
 
+         bit/2,
+         bits/1,
+
          fingerprint/1,
          fingerprint/2
         ]).
@@ -30,6 +33,23 @@
         Result  :: binary().
 trim(Subject, Pattern) when is_binary(Subject) ->
     iolist_to_binary(binary:split(Subject, Pattern, [global, trim_all])).
+
+%% @doc Get the bit value at a given position of a binary.
+-spec bit(Subject, Position) -> 0 | 1
+    when
+        Subject  :: binary(),
+        Position :: non_neg_integer().
+bit(Subject, Position) ->
+    Byte = binary:at(Subject, Position div 8),
+    (Byte bsr (onion_math:mod(Position, 8))) band 1.
+
+%% @doc Show the binary representation of a given binary.
+-spec bits(Subject) -> [Bit]
+    when
+        Subject :: binary(),
+        Bit     :: 0 | 1.
+bits(Subject) ->
+    [Bit || <<Bit:1/integer>> <= Subject].
 
 %% @doc Get the fingerprint of a given binary.
 -spec fingerprint(Data) -> binary()
@@ -63,6 +83,26 @@ trim_basic_test() ->
         ?assertEqual(trim(<<"foo bar baz">>, [<<" ">>]), <<"foobarbaz">>),
         ?assertEqual(trim(<<"foo bar\nbaz">>, [<<" ">>, <<"\n">>]), <<"foobarbaz">>),
         ?assertEqual(trim(<<"  foo   bar\n \n  \nbaz   ">>, [<<" ">>, <<"\n">>]), <<"foobarbaz">>)
+    ].
+
+bit_test() ->
+    [
+        ?assertEqual(bit(<<255>>, 0), 1),
+        ?assertEqual(bit(<<255>>, 1), 1),
+        ?assertEqual(bit(<<255>>, 2), 1),
+        ?assertEqual(bit(<<255>>, 7), 1),
+
+        ?assertEqual(bit(<<0>>, 0), 0),
+        ?assertEqual(bit(<<0>>, 1), 0),
+        ?assertEqual(bit(<<0>>, 2), 0),
+        ?assertEqual(bit(<<0>>, 7), 0)
+    ].
+
+bits_test() ->
+    [
+        ?assertEqual(bits(<<0>>), [0, 0, 0, 0, 0, 0, 0, 0]),
+        ?assertEqual(bits(<<0, 0>>), [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
+        ?assertEqual(bits(<<255, 3>>), [1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1])
     ].
 
 fingerprint_basic_test() ->
