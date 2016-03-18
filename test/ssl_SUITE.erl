@@ -43,8 +43,8 @@ init_per_testcase(_Case, Config) ->
     {ok, SecretKeyDER} = onion_rsa:der_encode(SecretKey),
     {ok, Cert} = onion_x509:create_certificate(#{
                     public_key => PublicKey,
-                    valid_from => onion_time:from_unix_epoch(0),
-                    valid_to   => onion_time:from_unix_epoch(0),
+                    valid_from => onion_time:from_epoch(0),
+                    valid_to   => onion_time:from_epoch(0),
                     subject    => [{name, "example.org"}],
                     issuer     => [{name, "example.org"}]
                  }),
