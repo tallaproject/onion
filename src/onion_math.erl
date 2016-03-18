@@ -14,7 +14,8 @@
 -export([ceil/1,
          floor/1,
          pow/2,
-         mod/2
+         mod/2,
+         mod_pow/3
         ]).
 
 -include("onion_test.hrl").
@@ -68,6 +69,43 @@ pow(X, N) ->
         Y :: integer().
 mod(X, Y) ->
     trunc(X rem Y).
+
+%% @doc Return B^E mod M.
+-spec mod_pow(Base, Exponent, Modulus) -> Result
+    when
+        Base     :: number(),
+        Exponent :: number(),
+        Modulus  :: number(),
+        Result   :: number().
+mod_pow(_, _, 1) ->
+    0;
+
+mod_pow(B, E, M) ->
+    Result = 1,
+    Base   = mod(B, M),
+    do_mod_pow(Base, E, M, Result).
+
+%% @private
+-spec do_mod_pow(Base, Exponent, Modulus, Result) -> Result
+    when
+        Base     :: number(),
+        Exponent :: number(),
+        Modulus  :: number(),
+        Result   :: number().
+do_mod_pow(B, E, M, Result) when E > 0 ->
+    NewB      = mod(B * B, M),
+    NewE      = E bsr 1,
+    NewResult = case mod(E, 2) =:= 1 of
+                    true ->
+                        mod(Result * B, M);
+
+                    false ->
+                        Result
+                end,
+    do_mod_pow(NewB, NewE, M, NewResult);
+
+do_mod_pow(_, _, _, Result) ->
+    Result.
 
 -ifdef(TEST).
 ceil_test() ->
