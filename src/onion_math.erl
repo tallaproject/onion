@@ -95,11 +95,11 @@ mod_pow(B, E, M) ->
 do_mod_pow(B, E, M, Result) when E > 0 ->
     NewB      = mod(B * B, M),
     NewE      = E bsr 1,
-    NewResult = case mod(E, 2) =:= 1 of
-                    true ->
+    NewResult = case mod(E, 2) of
+                    1 ->
                         mod(Result * B, M);
 
-                    false ->
+                    _ ->
                         Result
                 end,
     do_mod_pow(NewB, NewE, M, NewResult);

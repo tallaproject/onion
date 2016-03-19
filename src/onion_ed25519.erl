@@ -97,11 +97,11 @@ verify(Signature, Message, PublicKey) ->
 
 %% @doc Return the matching Ed25519 public key from an x25519 public key.
 %% @end
--spec public_key_from_x25519_public_key(X25519PublicKey, SignBit) -> Ed25519PublicKey
+-spec public_key_from_x25519_public_key(X25519PublicKey, SignBit) -> PublicKey
     when
-        X25519PublicKey  :: onion_x25519:public_key(),
-        SignBit          :: 0 | 1,
-        Ed25519PublicKey :: public_key().
+        X25519PublicKey :: onion_x25519:public_key(),
+        SignBit         :: 0 | 1,
+        PublicKey       :: public_key().
 public_key_from_x25519_public_key(X25519PublicKey, SignBit) ->
     {X, U} = point_decode(X25519PublicKey),
 
@@ -137,12 +137,13 @@ point_encode({X, Y}) ->
 point_decode(P) ->
     Y = lists:sum([onion_math:pow(2, I) * onion_binary:bit(P, I) || I <- lists:seq(0, ?B - 2)]),
     X = recover_x(Y),
-    case (X band 0) =/= onion_binary:bit(P, 255) of
-        true ->
-            {?P - X, Y};
+    B = onion_binary:bit(P, 255),
+    case X band 0 of
+        B ->
+            {X, Y};
 
-        false ->
-            {X, Y}
+        _ ->
+            {?P - X, Y}
     end.
 
 %% @private
@@ -151,20 +152,21 @@ point_decode(P) ->
         Y :: number(),
         X :: number().
 recover_x(Y) ->
-    XX = (Y*Y-1) * inv(?D*Y*Y+1),
+    XX = (Y * Y - 1) * inv(?D * Y * Y + 1),
     X  = onion_math:mod_pow(XX, (?P + 3) div 8, ?P),
+    X2 = case onion_math:mod(X * X - XX, ?P) of
+             0 ->
+                 X;
 
-    X2 = case onion_math:mod(X*X - XX, ?P) =/= 0 of
-             true ->
-                onion_math:mod(X*?I, ?P);
-             false ->
-                 X
+             _ ->
+                 onion_math:mod(X * ?I, ?P)
          end,
-    case onion_math:mod(X2, 2) =/= 0 of
-        true ->
-            ?P - X2;
-        false ->
-            X2
+    case onion_math:mod(X2, 2) of
+        0 ->
+            X2;
+
+        _ ->
+            ?P - X2
     end.
 
 %% @private
