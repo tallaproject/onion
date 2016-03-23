@@ -1,0 +1,13 @@
+image: ahf/erlang:18.3
+
+before_script:
+    - apt-get update -qq && apt-get install -y -qq libsodium-dev
+    - erl +V
+
+stages:
+    - test
+
+job:
+    stage: test
+    script:
+        - make check
