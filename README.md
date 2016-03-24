@@ -32,6 +32,7 @@ $ make doc
 <tr><td><a href="https://lab.baconsvin.org/talla/onion/blob/develop/doc/onion_base64.md" class="module">onion_base64</a></td></tr>
 <tr><td><a href="https://lab.baconsvin.org/talla/onion/blob/develop/doc/onion_binary.md" class="module">onion_binary</a></td></tr>
 <tr><td><a href="https://lab.baconsvin.org/talla/onion/blob/develop/doc/onion_cell.md" class="module">onion_cell</a></td></tr>
+<tr><td><a href="https://lab.baconsvin.org/talla/onion/blob/develop/doc/onion_cert.md" class="module">onion_cert</a></td></tr>
 <tr><td><a href="https://lab.baconsvin.org/talla/onion/blob/develop/doc/onion_certs_cell.md" class="module">onion_certs_cell</a></td></tr>
 <tr><td><a href="https://lab.baconsvin.org/talla/onion/blob/develop/doc/onion_config.md" class="module">onion_config</a></td></tr>
 <tr><td><a href="https://lab.baconsvin.org/talla/onion/blob/develop/doc/onion_dh.md" class="module">onion_dh</a></td></tr>
@@ -39,6 +40,7 @@ $ make doc
 <tr><td><a href="https://lab.baconsvin.org/talla/onion/blob/develop/doc/onion_ed25519.md" class="module">onion_ed25519</a></td></tr>
 <tr><td><a href="https://lab.baconsvin.org/talla/onion/blob/develop/doc/onion_exit_policy.md" class="module">onion_exit_policy</a></td></tr>
 <tr><td><a href="https://lab.baconsvin.org/talla/onion/blob/develop/doc/onion_file.md" class="module">onion_file</a></td></tr>
+<tr><td><a href="https://lab.baconsvin.org/talla/onion/blob/develop/doc/onion_geoip.md" class="module">onion_geoip</a></td></tr>
 <tr><td><a href="https://lab.baconsvin.org/talla/onion/blob/develop/doc/onion_kdf.md" class="module">onion_kdf</a></td></tr>
 <tr><td><a href="https://lab.baconsvin.org/talla/onion/blob/develop/doc/onion_lists.md" class="module">onion_lists</a></td></tr>
 <tr><td><a href="https://lab.baconsvin.org/talla/onion/blob/develop/doc/onion_math.md" class="module">onion_math</a></td></tr>
