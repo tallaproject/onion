@@ -57,8 +57,8 @@ parse_lines([Line | Rest], Result, FileParser) ->
 parse_ipv4_line([Start, End, Country]) ->
     StartInteger = binary_to_integer(Start),
     EndInteger   = binary_to_integer(End),
-    StartAddress = {StartInteger band 16#ff, (StartInteger bsr 8) band 16#ff, (StartInteger bsr 16) band 16#ff, (StartInteger bsr 24) band 16#ff},
-    EndAddress   = {EndInteger band 16#ff, (EndInteger bsr 8) band 16#ff, (EndInteger bsr 16) band 16#ff, (EndInteger bsr 24) band 16#ff},
+    StartAddress = {(StartInteger bsr 24) band 16#ff, (StartInteger bsr 16) band 16#ff, (StartInteger bsr 8) band 16#ff, StartInteger band 16#ff},
+    EndAddress   = {(EndInteger bsr 24) band 16#ff, (EndInteger bsr 16) band 16#ff, (EndInteger bsr 8) band 16#ff, EndInteger band 16#ff},
     {{StartAddress, EndAddress}, Country}.
 
 %% @private
