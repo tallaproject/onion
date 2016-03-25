@@ -26,10 +26,10 @@ __Authors:__ Alexander Færøy ([`ahf@0x90.dk`](mailto:ahf@0x90.dk)).
 ### parse_ipv4_file/1 ###
 
 <pre><code>
-parse_ipv4_file(Filename) -&gt; {ok, [{<a href="inet.md#type-ip4_address">inet:ip4_address()</a>, <a href="inet.md#type-ip4_address">inet:ip4_address()</a>, binary()}]} | {error, Reason}
+parse_ipv4_file(Filename) -&gt; {ok, [{<a href="inet.md#type-ip4_address">inet:ip4_address()</a>, <a href="inet.md#type-ip4_address">inet:ip4_address()</a>, binary()}], Digest} | {error, Reason}
 </code></pre>
 
-<ul class="definitions"><li><code>Filename = <a href="file.md#type-filename">file:filename()</a></code></li><li><code>Reason = term()</code></li></ul>
+<ul class="definitions"><li><code>Filename = <a href="file.md#type-filename">file:filename()</a></code></li><li><code>Digest = binary()</code></li><li><code>Reason = term()</code></li></ul>
 
 Parse a GeoIP file containing IPv4 addresses.
 
@@ -38,10 +38,10 @@ Parse a GeoIP file containing IPv4 addresses.
 ### parse_ipv6_file/1 ###
 
 <pre><code>
-parse_ipv6_file(Filename) -&gt; {ok, [{<a href="inet.md#type-ip6_address">inet:ip6_address()</a>, <a href="inet.md#type-ip6_address">inet:ip6_address()</a>, binary()}]} | {error, Reason}
+parse_ipv6_file(Filename) -&gt; {ok, [{<a href="inet.md#type-ip6_address">inet:ip6_address()</a>, <a href="inet.md#type-ip6_address">inet:ip6_address()</a>, binary()}], Digest} | {error, Reason}
 </code></pre>
 
-<ul class="definitions"><li><code>Filename = <a href="file.md#type-filename">file:filename()</a></code></li><li><code>Reason = term()</code></li></ul>
+<ul class="definitions"><li><code>Filename = <a href="file.md#type-filename">file:filename()</a></code></li><li><code>Digest = binary()</code></li><li><code>Reason = term()</code></li></ul>
 
 Parse a GeoIP file containing IPv6 addresses.
 

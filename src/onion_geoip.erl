@@ -17,17 +17,19 @@
         ]).
 
 %% @doc Parse a GeoIP file containing IPv4 addresses.
--spec parse_ipv4_file(Filename) -> {ok, [{inet:ip4_address(), inet:ip4_address(), binary()}]} | {error, Reason}
+-spec parse_ipv4_file(Filename) -> {ok, [{inet:ip4_address(), inet:ip4_address(), binary()}], Digest} | {error, Reason}
     when
         Filename :: file:filename(),
+        Digest   :: binary(),
         Reason   :: term().
 parse_ipv4_file(Filename) ->
     parse_file(Filename, fun parse_ipv4_line/1).
 
 %% @doc Parse a GeoIP file containing IPv6 addresses.
--spec parse_ipv6_file(Filename) -> {ok, [{inet:ip6_address(), inet:ip6_address(), binary()}]} | {error, Reason}
+-spec parse_ipv6_file(Filename) -> {ok, [{inet:ip6_address(), inet:ip6_address(), binary()}], Digest} | {error, Reason}
     when
         Filename :: file:filename(),
+        Digest   :: binary(),
         Reason   :: term().
 parse_ipv6_file(Filename) ->
     parse_file(Filename, fun parse_ipv6_line/1).
@@ -36,7 +38,7 @@ parse_ipv6_file(Filename) ->
 parse_file(Filename, LineParser) ->
     case file:read_file(Filename) of
         {ok, FileContent} ->
-            {ok, parse_lines(binary:split(FileContent, <<"\n">>, [global, trim]), [], LineParser)};
+            {ok, parse_lines(binary:split(FileContent, <<"\n">>, [global, trim]), [], LineParser), crypto:hash(sha, FileContent)};
 
         {error, _} = Error ->
             Error
