@@ -48,6 +48,7 @@ $ make doc
 <tr><td><a href="onion_os.md" class="module">onion_os</a></td></tr>
 <tr><td><a href="onion_pem.md" class="module">onion_pem</a></td></tr>
 <tr><td><a href="onion_protocol.md" class="module">onion_protocol</a></td></tr>
+<tr><td><a href="onion_pubsub.md" class="module">onion_pubsub</a></td></tr>
 <tr><td><a href="onion_random.md" class="module">onion_random</a></td></tr>
 <tr><td><a href="onion_registry.md" class="module">onion_registry</a></td></tr>
 <tr><td><a href="onion_relay.md" class="module">onion_relay</a></td></tr>
