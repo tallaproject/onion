@@ -262,16 +262,20 @@ decode(Version, Data) ->
     try
         case {Version, Data} of
             {4, <<Circuit:32/integer, Command:8/integer, Size:16/integer, Payload:Size/binary, Rest/binary>>} when Command =:= 7 orelse Command >= 128 ->
-                {ok, decode_cell(Circuit, Command, Payload), Rest};
+                DecodedCell = decode_cell(Circuit, Command, Payload),
+                {ok, maps:put(packet, <<Circuit:32/integer, Command:8/integer, Size:16/integer, Payload:Size/binary>>, DecodedCell), Rest};
 
             {4, <<Circuit:32/integer, Command:8/integer, Payload:509/binary, Rest/binary>>} ->
-                {ok, decode_cell(Circuit, Command, Payload), Rest};
+                DecodedCell = decode_cell(Circuit, Command, Payload),
+                {ok, maps:put(packet, <<Circuit:32/integer, Command:8/integer, Payload:509/binary>>, DecodedCell), Rest};
 
             {3, <<Circuit:16/integer, Command:8/integer, Size:16/integer, Payload:Size/binary, Rest/binary>>} when Command =:= 7 orelse Command >= 128 ->
-                {ok, decode_cell(Circuit, Command, Payload), Rest};
+                DecodedCell = decode_cell(Circuit, Command, Payload),
+                {ok, maps:put(packet, <<Circuit:16/integer, Command:8/integer, Size:16/integer, Payload:Size/binary>>, DecodedCell), Rest};
 
             {3, <<Circuit:16/integer, Command:8/integer, Payload:509/binary, Rest/binary>>} ->
-                {ok, decode_cell(Circuit, Command, Payload), Rest};
+                DecodedCell = decode_cell(Circuit, Command, Payload),
+                {ok, maps:put(packet, <<Circuit:16/integer, Command:8/integer, Payload:509/binary>>, DecodedCell), Rest};
 
             {_, _} ->
                 {error, insufficient_data}
@@ -690,8 +694,8 @@ error_code_to_integer(ErrorCode) ->
 -ifdef(TEST).
 decode_v3_cell_test() ->
     [
-        ?assertEqual(decode(3, <<0:16, 127:8, 0:4072>>),           {ok, #{ circuit => 0, command => {unknown_cell_command, 127}, payload => <<0:4072>> }, <<>>}),
-        ?assertEqual(decode(3, <<0:16, 127:8, 0:4072, "foobar">>), {ok, #{ circuit => 0, command => {unknown_cell_command, 127}, payload => <<0:4072>> }, <<"foobar">>})
+        ?assertEqual(decode(3, <<0:16, 127:8, 0:4072>>),           {ok, #{ circuit => 0, command => {unknown_cell_command, 127}, payload => <<0:4072>>, packet => <<0:16, 127:8, 0:4072>> }, <<>>}),
+        ?assertEqual(decode(3, <<0:16, 127:8, 0:4072, "foobar">>), {ok, #{ circuit => 0, command => {unknown_cell_command, 127}, payload => <<0:4072>>, packet => <<0:16, 127:8, 0:4072>> }, <<"foobar">>})
     ].
 
 decode_v3_cell_insufficient_data_test() ->
@@ -703,14 +707,14 @@ decode_v3_cell_insufficient_data_test() ->
 
 decode_v3_cell_version_test() ->
     [
-        ?assertEqual(decode(3, <<0:16, 7:8, 8:16, 1:16, 2:16, 3:16, 4:16, "foobar">>), {ok, #{ circuit => 0, command => versions, payload => [1, 2, 3, 4] }, <<"foobar">>}),
-        ?assertEqual(decode(3, <<0:16, 7:8, 0:16, "foobar">>), {ok, #{ circuit => 0, command => versions, payload => [] }, <<"foobar">>})
+        ?assertEqual(decode(3, <<0:16, 7:8, 8:16, 1:16, 2:16, 3:16, 4:16, "foobar">>), {ok, #{ circuit => 0, command => versions, payload => [1, 2, 3, 4], packet => <<0:16, 7:8, 8:16, 1:16, 2:16, 3:16, 4:16>> }, <<"foobar">>}),
+        ?assertEqual(decode(3, <<0:16, 7:8, 0:16, "foobar">>), {ok, #{ circuit => 0, command => versions, payload => [], packet => <<0:16, 7:8, 0:16>> }, <<"foobar">>})
     ].
 
 decode_v4_cell_test() ->
     [
-        ?assertEqual(decode(4, <<0:32, 127:8, 0:4072>>),           {ok, #{ circuit => 0, command => {unknown_cell_command, 127}, payload => <<0:4072>> }, <<>>}),
-        ?assertEqual(decode(4, <<0:32, 127:8, 0:4072, "foobar">>), {ok, #{ circuit => 0, command => {unknown_cell_command, 127}, payload => <<0:4072>> }, <<"foobar">>})
+        ?assertEqual(decode(4, <<0:32, 127:8, 0:4072>>),           {ok, #{ circuit => 0, command => {unknown_cell_command, 127}, payload => <<0:4072>>, packet => <<0:32, 127:8, 0:4072>> }, <<>>}),
+        ?assertEqual(decode(4, <<0:32, 127:8, 0:4072, "foobar">>), {ok, #{ circuit => 0, command => {unknown_cell_command, 127}, payload => <<0:4072>>, packet => <<0:32, 127:8, 0:4072>> }, <<"foobar">>})
     ].
 
 decode_v4_cell_insufficient_data_test() ->
