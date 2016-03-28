@@ -55,6 +55,7 @@ $ make doc
 <tr><td><a href="https://lab.baconsvin.org/talla/onion/blob/develop/doc/onion_rsa.md" class="module">onion_rsa</a></td></tr>
 <tr><td><a href="https://lab.baconsvin.org/talla/onion/blob/develop/doc/onion_server_descriptor.md" class="module">onion_server_descriptor</a></td></tr>
 <tr><td><a href="https://lab.baconsvin.org/talla/onion/blob/develop/doc/onion_ssl.md" class="module">onion_ssl</a></td></tr>
+<tr><td><a href="https://lab.baconsvin.org/talla/onion/blob/develop/doc/onion_ssl_session.md" class="module">onion_ssl_session</a></td></tr>
 <tr><td><a href="https://lab.baconsvin.org/talla/onion/blob/develop/doc/onion_string.md" class="module">onion_string</a></td></tr>
 <tr><td><a href="https://lab.baconsvin.org/talla/onion/blob/develop/doc/onion_time.md" class="module">onion_time</a></td></tr>
 <tr><td><a href="https://lab.baconsvin.org/talla/onion/blob/develop/doc/onion_x25519.md" class="module">onion_x25519</a></td></tr>
