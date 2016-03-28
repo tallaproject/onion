@@ -14,7 +14,9 @@
 -module(onion_kdf).
 
 %% API.
--export([hkdf/4]).
+-export([hkdf/4,
+         kdf_tor/2
+        ]).
 
 -include("onion_test.hrl").
 
@@ -34,6 +36,21 @@
 hkdf(Key, Salt, Info, Length) ->
     PRK = hkdf_hmac(Salt, Key),
     hkdf_expand(PRK, Info, Length).
+
+%% @doc KDF-Tor
+%%
+%% For more information, see tor-spec.txt section 5.2.1.
+%%
+%% @end
+-spec kdf_tor(Key, Length) -> binary()
+    when
+        Key    :: binary(),
+        Length :: pos_integer().
+kdf_tor(Key, Length) ->
+    L = (Length + 20 - onion_math:mod(Length, 20)) div 20,
+    R = iolist_to_binary([crypto:hash(sha, [Key, I]) || I <- lists:seq(0, L - 1)]),
+    <<Result:Length/binary, _/binary>> = R,
+    Result.
 
 %% @private
 hkdf_expand(PRK, Info, Length) ->
@@ -138,6 +155,27 @@ hkdf_rfc5869_3_test() ->
         ?assertEqual(hkdf(IKM, Salt, Info, L), base16_decode(["8da4e775a563c18f715f802a063c5a31",
                                                               "b8a11f5c5ee1879ec3454e5f3c738d2d",
                                                               "9d201395faa4b61a96c8"]))
+    ].
+
+kdf_tor_test() ->
+    [
+        ?assertEqual(kdf_tor(<<"">>, 100),
+                     base16_decode(["5ba93c9db0cff93f52b521d7420e43f6eda2784fbf8b4530d8",
+                                    "d246dd74ac53a13471bba17941dff7c4ea21bb365bbeeaf5f2",
+                                    "c654883e56d11e43c44e9842926af7ca0a8cca12604f945414",
+                                    "f07b01e13da42c6cf1de3abfdea9b95f34687cbbe92b9a7383"])),
+
+        ?assertEqual(kdf_tor(<<"Tor">>, 100),
+                     base16_decode(["776c6214fc647aaa5f683c737ee66ec44f03d0372e1cce6922",
+                                    "7950f236ddf1e329a7ce7c227903303f525a8c6662426e8034",
+                                    "870642a6dabbd41b5d97ec9bf2312ea729992f48f8ea2d0ba8",
+                                    "3f45dfda1a80bdc8b80de01b23e3e0ffae099b3e4ccf28dc28"])),
+
+        ?assertEqual(kdf_tor(<<"AN ALARMING ITEM TO FIND ON A MONTHLY AUTO-DEBIT NOTICE">>, 100),
+                     base16_decode(["a340b5d126086c3ab29c2af4179196dbf95e1c72431419d331",
+                                    "4844bf8f6afb6098db952b95581fb6c33625709d6f4400b8e7",
+                                    "ace18a70579fad83c0982ef73f89395bcc39493ad53a685854",
+                                    "daf2ba9b78733b805d9a6824c907ee1dba5ac27a1e466d4d10"]))
     ].
 
 -endif.
