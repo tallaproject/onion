@@ -222,7 +222,7 @@ private_encrypt(PlainText, SecretKey) when is_binary(PlainText) ->
         Padding    :: rsa_pkcs1_padding | rsa_no_padding,
         CipherText :: binary().
 private_encrypt(PlainText, SecretKey, Padding) when is_binary(PlainText), is_atom(Padding) ->
-    crypto:private_encrypt(rsa, PlainText, secret_key_to_list(SecretKey), Padding).
+    public_key:encrypt_private(PlainText, SecretKey, [{rsa_pad, Padding}]).
 
 -spec private_decrypt(CipherText, SecretKey) -> PlainText
     when
@@ -239,7 +239,7 @@ private_decrypt(CipherText, SecretKey) when is_binary(CipherText) ->
         Padding    :: rsa_pkcs1_padding | rsa_pkcs1_oaep_padding | rsa_no_padding,
         PlainText  :: binary().
 private_decrypt(CipherText, SecretKey, Padding) when is_binary(CipherText), is_atom(Padding) ->
-    crypto:private_decrypt(rsa, CipherText, secret_key_to_list(SecretKey), Padding).
+    public_key:decrypt_private(CipherText, SecretKey, [{rsa_pad, Padding}]).
 
 -spec public_encrypt(PlainText, PublicKey) -> CipherText
     when
@@ -256,7 +256,7 @@ public_encrypt(PlainText, PublicKey) when is_binary(PlainText) ->
         Padding    :: rsa_pkcs1_padding | rsa_pkcs1_oaep_padding | rsa_no_padding,
         CipherText :: binary().
 public_encrypt(PlainText, PublicKey, Padding) ->
-    crypto:public_encrypt(rsa, PlainText, public_key_to_list(PublicKey), Padding).
+    public_key:encrypt_public(PlainText, PublicKey, [{rsa_pad, Padding}]).
 
 -spec public_decrypt(CipherText, PublicKey) -> PlainText
     when
@@ -273,7 +273,7 @@ public_decrypt(CipherText, PublicKey) when is_binary(CipherText) ->
         Padding    :: rsa_pkcs1_padding | rsa_no_padding,
         PlainText  :: binary().
 public_decrypt(CipherText, PublicKey, Padding) when is_binary(CipherText), is_atom(Padding) ->
-    crypto:public_decrypt(rsa, CipherText, public_key_to_list(PublicKey), Padding).
+    public_key:decrypt_public(CipherText, PublicKey, [{rsa_pad, Padding}]).
 
 -spec sign(DigestType, Message, SecretKey) -> Result
     when
@@ -282,7 +282,7 @@ public_decrypt(CipherText, PublicKey, Padding) when is_binary(CipherText), is_at
         SecretKey  :: secret_key(),
         Result     :: binary().
 sign(DigestType, Message, SecretKey) ->
-    crypto:sign(rsa, DigestType, Message, secret_key_to_list(SecretKey)).
+    public_key:sign(Message, DigestType, SecretKey).
 
 -spec verify(DigestType, Message, Signature, PublicKey) -> boolean()
     when
@@ -291,7 +291,7 @@ sign(DigestType, Message, SecretKey) ->
         Signature  :: binary(),
         PublicKey  :: public_key().
 verify(DigestType, Message, Signature, PublicKey) ->
-    crypto:verify(rsa, DigestType, Message, Signature, public_key_to_list(PublicKey)).
+    public_key:verify(Message, DigestType, Signature, PublicKey).
 
 -spec key_size(Key) -> BitSize
     when
@@ -313,31 +313,3 @@ strip_trailing_newline(Data) ->
     ResultSize = byte_size(Data) - 1,
     <<Result:ResultSize/binary, "\n">> = Data,
     Result.
-
-%% @private
--spec secret_key_to_list(SecretKey) -> [term()]
-    when
-        SecretKey :: secret_key().
-secret_key_to_list(SecretKey) ->
-    #'RSAPrivateKey'{
-            publicExponent  = E,
-            modulus         = N,
-            privateExponent = D,
-            prime1          = P1,
-            prime2          = P2,
-            exponent1       = E1,
-            exponent2       = E2,
-            coefficient     = C
-        } = SecretKey,
-    [E, N, D, P1, P2, E1, E2, C].
-
-%% @private
--spec public_key_to_list(PublicKey) -> [term()]
-    when
-        PublicKey :: public_key().
-public_key_to_list(PublicKey) ->
-    #'RSAPublicKey'{
-            publicExponent = E,
-            modulus        = N
-        } = PublicKey,
-    [E, N].
