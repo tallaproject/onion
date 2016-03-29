@@ -89,4 +89,11 @@ encrypt_decrypt_large_test() ->
         ?assertEqual(Message, decrypt(encrypt(Message, Public), Secret))
     ].
 
+encrypt_decrypt_empty_test() ->
+    {ok, #{ secret := Secret, public := Public }} = onion_rsa:keypair(1024),
+    Message = <<>>,
+    [
+        ?assertException(error, decrypt_failed, decrypt(encrypt(Message, Public), Secret))
+    ].
+
 -endif.
