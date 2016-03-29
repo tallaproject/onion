@@ -213,13 +213,13 @@ pem_decode(Bytes) when is_binary(Bytes) ->
         SecretKey  :: secret_key(),
         CipherText :: binary().
 private_encrypt(PlainText, SecretKey) when is_binary(PlainText) ->
-    private_encrypt(PlainText, SecretKey, rsa_pkcs1_padding).
+    private_encrypt(PlainText, SecretKey, rsa_pkcs1_oaep_padding).
 
 -spec private_encrypt(PlainText, SecretKey, Padding) -> CipherText
     when
         PlainText  :: binary(),
         SecretKey  :: secret_key(),
-        Padding    :: rsa_pkcs1_padding | rsa_no_padding,
+        Padding    :: rsa_pkcs1_oaep_padding | rsa_pkcs1_padding | rsa_no_padding,
         CipherText :: binary().
 private_encrypt(PlainText, SecretKey, Padding) when is_binary(PlainText), is_atom(Padding) ->
     public_key:encrypt_private(PlainText, SecretKey, [{rsa_pad, Padding}]).
@@ -236,7 +236,7 @@ private_decrypt(CipherText, SecretKey) when is_binary(CipherText) ->
     when
         CipherText :: binary(),
         SecretKey  :: secret_key(),
-        Padding    :: rsa_pkcs1_padding | rsa_pkcs1_oaep_padding | rsa_no_padding,
+        Padding    :: rsa_pkcs1_oaep_padding | rsa_pkcs1_padding | rsa_no_padding,
         PlainText  :: binary().
 private_decrypt(CipherText, SecretKey, Padding) when is_binary(CipherText), is_atom(Padding) ->
     public_key:decrypt_private(CipherText, SecretKey, [{rsa_pad, Padding}]).
@@ -253,7 +253,7 @@ public_encrypt(PlainText, PublicKey) when is_binary(PlainText) ->
     when
         PlainText  :: binary(),
         PublicKey  :: public_key(),
-        Padding    :: rsa_pkcs1_padding | rsa_pkcs1_oaep_padding | rsa_no_padding,
+        Padding    :: rsa_pkcs1_oaep_padding | rsa_pkcs1_padding | rsa_no_padding,
         CipherText :: binary().
 public_encrypt(PlainText, PublicKey, Padding) ->
     public_key:encrypt_public(PlainText, PublicKey, [{rsa_pad, Padding}]).
@@ -264,13 +264,13 @@ public_encrypt(PlainText, PublicKey, Padding) ->
         PublicKey  :: public_key(),
         PlainText  :: binary().
 public_decrypt(CipherText, PublicKey) when is_binary(CipherText) ->
-    public_decrypt(CipherText, PublicKey, rsa_pkcs1_padding).
+    public_decrypt(CipherText, PublicKey, rsa_pkcs1_oaep_padding).
 
 -spec public_decrypt(CipherText, PublicKey, Padding) -> PlainText
     when
         CipherText :: binary(),
         PublicKey  :: public_key(),
-        Padding    :: rsa_pkcs1_padding | rsa_no_padding,
+        Padding    :: rsa_pkcs1_oaep_padding | rsa_pkcs1_padding | rsa_no_padding,
         PlainText  :: binary().
 public_decrypt(CipherText, PublicKey, Padding) when is_binary(CipherText), is_atom(Padding) ->
     public_key:decrypt_public(CipherText, PublicKey, [{rsa_pad, Padding}]).
