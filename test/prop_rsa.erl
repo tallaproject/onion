@@ -15,7 +15,8 @@
          prop_der_iso/0,
          prop_pem_iso/0,
          prop_sign_verify/0,
-         prop_sign_verify_failure/0
+         prop_sign_verify_failure/0,
+         prop_encrypt_decrypt/0
         ]).
 
 -include_lib("public_key/include/public_key.hrl").
@@ -76,6 +77,18 @@ prop_sign_verify_failure() ->
             Signature = onion_rsa:sign(sha, Message, S),
             not onion_rsa:verify(sha, <<"foo", Message/binary>>, Signature, P)
         end).
+
+-spec prop_encrypt_decrypt() -> term().
+prop_encrypt_decrypt() ->
+    ?FORALL({RSAKeySize, Message}, {key_size(), binary()},
+        %% Not sure why it rejects empty messages?
+        ?IMPLIES(Message =/= <<>>,
+            begin
+                {S, P} = test_keypair(RSAKeySize),
+                Encrypted = onion_rsa:public_encrypt(Message, P),
+                Decrypted = onion_rsa:private_decrypt(Encrypted, S),
+                Message =:= Decrypted
+            end)).
 
 %% @private
 -spec key_size() -> term().
