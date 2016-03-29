@@ -41,6 +41,7 @@ $ make doc
 <tr><td><a href="https://lab.baconsvin.org/talla/onion/blob/develop/doc/onion_exit_policy.md" class="module">onion_exit_policy</a></td></tr>
 <tr><td><a href="https://lab.baconsvin.org/talla/onion/blob/develop/doc/onion_file.md" class="module">onion_file</a></td></tr>
 <tr><td><a href="https://lab.baconsvin.org/talla/onion/blob/develop/doc/onion_geoip.md" class="module">onion_geoip</a></td></tr>
+<tr><td><a href="https://lab.baconsvin.org/talla/onion/blob/develop/doc/onion_hybrid.md" class="module">onion_hybrid</a></td></tr>
 <tr><td><a href="https://lab.baconsvin.org/talla/onion/blob/develop/doc/onion_kdf.md" class="module">onion_kdf</a></td></tr>
 <tr><td><a href="https://lab.baconsvin.org/talla/onion/blob/develop/doc/onion_lists.md" class="module">onion_lists</a></td></tr>
 <tr><td><a href="https://lab.baconsvin.org/talla/onion/blob/develop/doc/onion_math.md" class="module">onion_math</a></td></tr>
