@@ -85,7 +85,7 @@ shared_secret(SecretKey, PublicKey) ->
 is_degenerate(Value) when is_binary(Value) ->
     is_degenerate(crypto:bytes_to_integer(Value));
 
-is_degenerate(Value) when is_integer(Value), Value > 1 andalso Value < ?P - 1 ->
+is_degenerate(Value) when is_integer(Value), Value > 1 andalso Value < ?P - 1, Value =/= ?G ->
     false;
 
 is_degenerate(Value) when is_integer(Value) ->
@@ -108,11 +108,12 @@ degenerate_test() ->
         ?assert(is_degenerate(-1)),
         ?assert(is_degenerate(0)),
         ?assert(is_degenerate(1)),
+        ?assert(is_degenerate(?G)),
         ?assert(is_degenerate(?P)),
         ?assert(is_degenerate(?P - 1)),
 
-        ?assertNot(is_degenerate(2)),
         ?assertNot(is_degenerate(3)),
+        ?assertNot(is_degenerate(4)),
         ?assertNot(is_degenerate(?P - 2))
     ].
 

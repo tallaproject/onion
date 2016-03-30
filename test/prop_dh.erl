@@ -45,18 +45,32 @@ prop_public_key_not_degenerate() ->
 -spec bad_public_key() -> term().
 bad_public_key() ->
     ?LET(P, p(),
-        begin
-            oneof([
-                neg_integer(),
-                integer(0, 1),
-                integer(P - 1, inf)
-            ])
-        end).
+        ?LET(G, g(),
+            begin
+                oneof([
+                    %% All negative numbers.
+                    neg_integer(),
+
+                    %% 0 and 1.
+                    integer(0, 1),
+
+                    %% The generator.
+                    G,
+
+                    %% P - 1 towards infinity.
+                    integer(P - 1, inf)
+                ])
+            end)).
 
 %% @private
 -spec p() -> term().
 p() ->
     ?LET(L, onion_dh:params(), hd(L)).
+
+%% @private
+-spec g() -> term().
+g() ->
+    ?LET(L, onion_dh:params(), lists:last(L)).
 
 %% @private
 -spec test_keypair() -> term().
