@@ -116,10 +116,10 @@ Diffie-Hellman computations in this module and in the OTP crypto module.
 ### shared_secret/2 ###
 
 <pre><code>
-shared_secret(SecretKey, PublicKey) -&gt; SharedSecret
+shared_secret(SecretKey, PublicKey) -&gt; {ok, SharedSecret} | {error, Reason}
 </code></pre>
 
-<ul class="definitions"><li><code>SecretKey = <a href="#type-secret_key">secret_key()</a></code></li><li><code>PublicKey = <a href="#type-public_key">public_key()</a></code></li><li><code>SharedSecret = binary()</code></li></ul>
+<ul class="definitions"><li><code>SecretKey = <a href="#type-secret_key">secret_key()</a></code></li><li><code>PublicKey = <a href="#type-public_key">public_key()</a></code></li><li><code>SharedSecret = binary()</code></li><li><code>Reason = term()</code></li></ul>
 
 Computes the shared secret between a SecretKey and PublicKey.
 

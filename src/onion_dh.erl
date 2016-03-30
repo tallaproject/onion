@@ -57,11 +57,12 @@ keypair() ->
 %% PublicKey.
 %%
 %% @end
--spec shared_secret(SecretKey, PublicKey) -> SharedSecret
+-spec shared_secret(SecretKey, PublicKey) -> {ok, SharedSecret} | {error, Reason}
     when
         SecretKey    :: secret_key(),
         PublicKey    :: public_key(),
-        SharedSecret :: binary().
+        SharedSecret :: binary(),
+        Reason       :: term().
 shared_secret(SecretKey, PublicKey) ->
     case is_degenerate(PublicKey) of
         false ->
