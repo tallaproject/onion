@@ -59,12 +59,28 @@ secret_key() = <a href="crypto.md#type-dh_private">crypto:dh_private()</a>
 ## Function Index ##
 
 
-<table width="100%" border="1" cellspacing="0" cellpadding="2" summary="function index"><tr><td valign="top"><a href="#keypair-0">keypair/0</a></td><td>Creates a new Diffie-Hellman keypair.</td></tr><tr><td valign="top"><a href="#params-0">params/0</a></td><td>Diffie-Hellman parameters used by Tor (from RFC 2409).</td></tr><tr><td valign="top"><a href="#shared_secret-2">shared_secret/2</a></td><td>Computes the shared secret between a SecretKey and PublicKey.</td></tr></table>
+<table width="100%" border="1" cellspacing="0" cellpadding="2" summary="function index"><tr><td valign="top"><a href="#is_degenerate-1">is_degenerate/1</a></td><td>Verify if a given integer is degenerate.</td></tr><tr><td valign="top"><a href="#keypair-0">keypair/0</a></td><td>Creates a new Diffie-Hellman keypair.</td></tr><tr><td valign="top"><a href="#params-0">params/0</a></td><td>Diffie-Hellman parameters used by Tor (from RFC 2409).</td></tr><tr><td valign="top"><a href="#shared_secret-2">shared_secret/2</a></td><td>Computes the shared secret between a SecretKey and PublicKey.</td></tr></table>
 
 
 <a name="functions"></a>
 
 ## Function Details ##
+
+<a name="is_degenerate-1"></a>
+
+### is_degenerate/1 ###
+
+<pre><code>
+is_degenerate(Value) -&gt; boolean()
+</code></pre>
+
+<ul class="definitions"><li><code>Value = non_neg_integer()</code></li></ul>
+
+Verify if a given integer is degenerate.
+
+This function can be used to check that the g^x or g^x value is not
+degenerate. That is, the value is within the range 2 and P - 2 (both
+included).
 
 <a name="keypair-0"></a>
 

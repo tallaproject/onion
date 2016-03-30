@@ -20,6 +20,7 @@
 %% API.
 -export([keypair/0,
          shared_secret/2,
+         is_degenerate/1,
          params/0]).
 
 %% Types.
@@ -48,7 +49,7 @@
 -spec keypair() -> keypair().
 keypair() ->
     {PublicKey, SecretKey} = crypto:generate_key(dh, params()),
-    #{ secret => SecretKey, public => PublicKey }.
+    #{ secret => crypto:bytes_to_integer(SecretKey), public => crypto:bytes_to_integer(PublicKey) }.
 
 %% @doc Computes the shared secret between a SecretKey and PublicKey.
 %%
@@ -62,7 +63,32 @@ keypair() ->
         PublicKey    :: public_key(),
         SharedSecret :: binary().
 shared_secret(SecretKey, PublicKey) ->
-    crypto:compute_key(dh, PublicKey, SecretKey, params()).
+    case is_degenerate(PublicKey) of
+        false ->
+            {ok, crypto:compute_key(dh, PublicKey, SecretKey, params())};
+
+        true ->
+            {error, degenerate_public_key}
+    end.
+
+%% @doc Verify if a given integer is degenerate.
+%%
+%% This function can be used to check that the g^x or g^x value is not
+%% degenerate. That is, the value is within the range 2 and P - 2 (both
+%% included).
+%%
+%% @end
+-spec is_degenerate(Value) -> boolean()
+    when
+        Value :: non_neg_integer().
+is_degenerate(Value) when is_binary(Value) ->
+    is_degenerate(crypto:bytes_to_integer(Value));
+
+is_degenerate(Value) when is_integer(Value), Value > 1 andalso Value < ?P - 1 ->
+    false;
+
+is_degenerate(Value) when is_integer(Value) ->
+    true.
 
 %% @doc Diffie-Hellman parameters used by Tor (from RFC 2409).
 %%
@@ -74,3 +100,19 @@ shared_secret(SecretKey, PublicKey) ->
 -spec params() -> [non_neg_integer()].
 params() ->
     [?P, ?G].
+
+-ifdef(TEST).
+degenerate_test() ->
+    [
+        ?assert(is_degenerate(-1)),
+        ?assert(is_degenerate(0)),
+        ?assert(is_degenerate(1)),
+        ?assert(is_degenerate(?P)),
+        ?assert(is_degenerate(?P - 1)),
+
+        ?assertNot(is_degenerate(2)),
+        ?assertNot(is_degenerate(3)),
+        ?assertNot(is_degenerate(?P - 2))
+    ].
+
+-endif.
