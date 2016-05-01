@@ -84,12 +84,12 @@ read_values(Config) ->
     ClientRandomServer = onion_ssl:client_random(ServerSocket),
     ServerRandomServer = onion_ssl:server_random(ServerSocket),
 
-    ct:pal("Master Secret:~n  ~s~n  ~s", [onion_test:base64_encode(MasterSecretClient),
-                                          onion_test:base64_encode(MasterSecretServer)]),
-    ct:pal("Client Random:~n  ~s~n  ~s", [onion_test:base64_encode(ClientRandomClient),
-                                          onion_test:base64_encode(ClientRandomServer)]),
-    ct:pal("Server Random:~n  ~s~n  ~s", [onion_test:base64_encode(ServerRandomClient),
-                                          onion_test:base64_encode(ServerRandomServer)]),
+    %% ct:pal("Master Secret:~n  ~s~n  ~s", [onion_test:base64_encode(MasterSecretClient),
+    %%                                       onion_test:base64_encode(MasterSecretServer)]),
+    %% ct:pal("Client Random:~n  ~s~n  ~s", [onion_test:base64_encode(ClientRandomClient),
+    %%                                       onion_test:base64_encode(ClientRandomServer)]),
+    %% ct:pal("Server Random:~n  ~s~n  ~s", [onion_test:base64_encode(ServerRandomClient),
+    %%                                       onion_test:base64_encode(ServerRandomServer)]),
 
     MasterSecretClient = MasterSecretServer,
     ClientRandomClient = ClientRandomServer,
