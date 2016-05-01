@@ -6,6 +6,7 @@
     {applications, [
         base32,
         crypto,
+        ed25519_ref10,
         enacl,
         gproc,
         inet_cidr,
