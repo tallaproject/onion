@@ -109,8 +109,11 @@ degenerate_test() ->
         ?assert(is_degenerate(0)),
         ?assert(is_degenerate(1)),
         ?assert(is_degenerate(?G)),
-        ?assert(is_degenerate(?P)),
         ?assert(is_degenerate(?P - 1)),
+        ?assert(is_degenerate(?P)),
+        ?assert(is_degenerate(?P + 1)),
+        ?assert(is_degenerate(?P + 2)),
+        ?assert(is_degenerate(?P + 256)),
 
         ?assertNot(is_degenerate(3)),
         ?assertNot(is_degenerate(4)),
