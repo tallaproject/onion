@@ -7,10 +7,6 @@
 
 #include "erl_nif.h"
 
-#ifndef ERL_NIF_DIRTY_SCHEDULER_SUPPORT
-#  error "onion requires dirty scheduler support"
-#endif
-
 #define ATOM(Name, Value) { Name = enif_make_atom(env, Value); }
 
 ERL_NIF_TERM make_error_tuple(ErlNifEnv *env, char *error);
