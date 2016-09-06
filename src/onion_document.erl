@@ -13,9 +13,11 @@
 
 %% API.
 -export([encode/1,
-         encode_datetime/1,
          get_item/2,
          split/2,
+         ed25519_sign/2,
+         rsa_sign/2,
+
          decode/1]).
 
 -include("onion_test.hrl").
@@ -33,22 +35,9 @@
         Arguments :: [binary()],
         Objects   :: [Object],
         Object    :: term(),
-        Data      :: iolist().
+        Data      :: binary().
 encode(Document) when is_list(Document) ->
-    lists:map(fun encode_document_entry/1, Document).
-
-%% @doc Encode datetime() to the reprensetation used in a directory document.
-%%
-%% This function encodes a datetime() into Tor's descriptor timestamp format
-%% and returns an string() as result.
-%%
-%% @end
--spec encode_datetime(Datetime) -> string()
-    when
-        Datetime :: calendar:datetime().
-encode_datetime({{Year, Month, Day}, {Hour, Minute, Second}}) ->
-    onion_string:format("~4..0b-~2..0b-~2..0b ~2..0b:~2..0b:~2..0b",
-                        [Year, Month, Day, Hour, Minute, Second]).
+    iolist_to_binary(lists:map(fun encode_entry/1, Document)).
 
 -spec get_item(Keyword, Document) -> Item | not_found
     when
@@ -99,6 +88,18 @@ split([{Keyword, _, _} = Item | Rest], Keyword, Data, Result) ->
 
 split([Item | Rest], Keyword, Data, Result) ->
     split(Rest, Keyword, [Item | Data], Result).
+
+ed25519_sign(Document, SecretKey) ->
+    EncodedDocument = encode(Document ++ [{'router-sig-ed25519', [<<>>]}]),
+    Prefix = <<"Tor router descriptor signature v1">>,
+    Signature = onion_ed25519:sign(<<Prefix/binary, EncodedDocument/binary>>, SecretKey),
+    Document ++ [{'router-sig-ed25519', [onion_base64:encode(Signature)]}].
+
+rsa_sign(Document, SecretKey) ->
+    EncodedDocument = encode(Document ++ [{'router-signature', []}]),
+    Hash = crypto:hash(sha, EncodedDocument),
+    Signature = onion_rsa:private_encrypt(Hash, SecretKey, rsa_pkcs1_padding),
+    Document ++ [{'router-signature', [], [{'SIGNATURE', Signature}]}].
 
 -spec decode(Data) -> {ok, [Item]} | {error, term()}
     when
@@ -158,22 +159,41 @@ keyword(V) when is_binary(V) ->
     V.
 
 %% @private
--spec encode_document_entry(DocumentEntry) -> iolist()
+encode_arguments(Arguments) ->
+    encode_arguments(Arguments, []).
+
+%% @private
+encode_arguments([], Arguments) ->
+    lists:reverse(Arguments);
+
+encode_arguments([Argument | Arguments], Acc) ->
+    encode_arguments(Arguments, [encode_argument(Argument) | Acc]).
+
+%% @private
+encode_argument({datetime, {{Year, Month, Day}, {Hour, Minute, Second}}}) ->
+    onion_string:format("~4..0b-~2..0b-~2..0b ~2..0b:~2..0b:~2..0b",
+                        [Year, Month, Day, Hour, Minute, Second]);
+
+encode_argument(Argument) ->
+    Argument.
+
+%% @private
+-spec encode_entry(DocumentEntry) -> iolist()
     when
         DocumentEntry :: {Keyword, Arguments, Objects},
         Keyword   :: string() | atom() | binary(),
         Arguments :: [binary()],
         Objects   :: [Object],
         Object    :: term().
-encode_document_entry({Keyword, Arguments}) ->
-    encode_document_entry({Keyword, Arguments, []});
+encode_entry({Keyword, Arguments}) ->
+    encode_entry({Keyword, Arguments, []});
 
-encode_document_entry({Keyword, Arguments, Objects}) ->
-    [onion_lists:intersperse(<<" ">>, lists:map(fun keyword/1, [keyword(Keyword) | Arguments])), <<"\n">>,
+encode_entry({Keyword, Arguments, Objects}) ->
+    [onion_lists:intersperse(<<" ">>, lists:map(fun keyword/1, [keyword(Keyword) | encode_arguments(Arguments)])), <<"\n">>,
      lists:map(fun encode_object/1, Objects)];
 
-encode_document_entry(List) when is_list(List) ->
-    lists:map(fun encode_document_entry/1, List).
+encode_entry(List) when is_list(List) ->
+    lists:map(fun encode_entry/1, List).
 
 %% @private
 -spec encode_object(Object) -> iolist()
