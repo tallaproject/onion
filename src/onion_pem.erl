@@ -12,23 +12,40 @@
 -module(onion_pem).
 
 %% API.
--export([encode/2]).
+-export([encode/2,
+         encode/3
+        ]).
 
 -spec encode(Type, Data) -> Result
     when
         Type   :: atom() | binary() | string(),
         Data   :: binary(),
         Result :: binary().
-encode(Type, Data) when is_atom(Type) ->
-    encode(atom_to_list(Type), Data);
+encode(Type, Data) ->
+    encode(Type, Data, true).
 
-encode(Type, Data) when is_binary(Type) ->
-    encode(binary_to_list(Type), Data);
+-spec encode(Type, Data, Split) -> Result
+    when
+        Type   :: atom() | binary() | string(),
+        Data   :: binary(),
+        Split  :: boolean(),
+        Result :: binary().
+encode(Type, Data, Split) when is_atom(Type) ->
+    encode(atom_to_list(Type), Data, Split);
 
-encode(Type, Data) when is_list(Type) ->
+encode(Type, Data, Split) when is_binary(Type) ->
+    encode(binary_to_list(Type), Data, Split);
+
+encode(Type, Data, Split) when is_list(Type) ->
     TypeString = string:to_upper(Type),
     iolist_to_binary([<<"-----BEGIN ">>, TypeString, <<"-----\n">>,
-                      base64_encode_and_split(Data),
+                      case Split of
+                          true ->
+                              base64_encode_and_split(Data);
+
+                          false ->
+                              onion_base64:encode(Data)
+                      end,
                       <<"\n-----END ">>, TypeString, <<"-----\n">>]).
 %% @private
 -spec base64_encode_and_split(Data) -> iolist()
