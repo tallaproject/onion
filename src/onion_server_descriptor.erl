@@ -90,7 +90,7 @@ encode(ServerDescriptor) ->
         end,
 
         %% "published" YYYY-MM-DD HH:MM:SS
-        {published, [onion_document:encode_datetime(Published)]},
+        {published, [{datetime, Published}]},
 
         %% "fingerprint" fingerprint
         {fingerprint, [onion_binary:fingerprint(sha, SigningKey)]},
