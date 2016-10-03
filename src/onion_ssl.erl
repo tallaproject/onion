@@ -60,7 +60,11 @@ lookup({sslsocket, _, Connection}) ->
     {_, #state {
             connection_states = CS
         }} = sys:get_state(Connection),
-    #connection_state {
-            security_parameters = Params
-        } = ssl_record:current_connection_state(CS, read),
-    Params.
+
+%% Pre OTP-19.1 hack:
+%%    #connection_state {
+%%            security_parameters = Params
+%%        } = ssl_record:current_connection_state(CS, read),
+%%
+%% OTP-19.1 hack:
+    maps:get(security_parameters, ssl_record:current_connection_state(CS, read)).
