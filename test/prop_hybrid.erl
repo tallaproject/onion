@@ -17,14 +17,12 @@
 
 -spec prop_iso() -> term().
 prop_iso() ->
-    ?FORALL({{S, P}, Message}, {test_keypair(), binary()},
-        %% Comes from the same issue in prop_rsa:prop_encrypt_decrypt/0.
-        ?IMPLIES(Message =/= <<>>,
-            begin
-                Encrypted = onion_hybrid:encrypt(Message, P),
-                Decrypted = onion_hybrid:decrypt(Encrypted, S),
-                Message =:= Decrypted
-            end)).
+    ?FORALL({{S, P}, Message}, {test_keypair(), non_empty(binary())},
+        begin
+            Encrypted = onion_hybrid:encrypt(Message, P),
+            Decrypted = onion_hybrid:decrypt(Encrypted, S),
+            Message =:= Decrypted
+        end).
 
 %% @private
 -spec test_keypair() -> term().
