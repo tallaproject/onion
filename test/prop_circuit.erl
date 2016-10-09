@@ -33,7 +33,7 @@ prop_high_bit() ->
             case CircuitIDBin of
                 <<Bit:1/integer, _:31/integer>> -> true;
                 <<Bit:1/integer, _:15/integer>> -> true;
-                X                               -> io:format("XXX: ~p~n~n~n", [X]), false
+                X                               -> false
             end
         end).
 
