@@ -4,7 +4,7 @@
   0},
  {<<"ed25519_ref10">>,
   {git,"https://lab.baconsvin.org/talla/ed25519_ref10.git",
-       {ref,"93fc03be4133d01772d05435780bf8e19dd11b18"}},
+       {ref,"0ab3dada13aec1b59adf9bb788ee8e38bff5c3b7"}},
   0},
  {<<"enacl">>,
   {git,"https://lab.baconsvin.org/talla/enacl.git",
