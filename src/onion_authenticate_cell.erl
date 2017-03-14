@@ -11,7 +11,9 @@
 -module(onion_authenticate_cell).
 
 %% API.
--export([create/1]).
+-export([create/1,
+         create_payload/2
+        ]).
 
 -include("onion_test.hrl").
 
@@ -57,18 +59,25 @@
     when
         Config :: config().
 create(Config) ->
-    Data = iolist_to_binary([<<"AUTH0001">>,
-                             public_key_hash(maps:get(client_identity_public_key, Config)),
-                             public_key_hash(maps:get(server_identity_public_key, Config)),
-                             maps:get(server_log, Config),
-                             maps:get(client_log, Config),
-                             certificate_hash(maps:get(server_certificate, Config)),
-                             tls_secrets(maps:get(ssl_session, Config)),
-                             random_bytes()]),
-
+    Data = create_payload(Config, random_bytes()),
     Hash = crypto:hash(sha256, Data),
     Signature = onion_rsa:private_encrypt(Hash, maps:get(authentication_secret_key, Config), rsa_pkcs1_padding),
     onion_cell:authenticate(1, <<Data/binary, Signature/binary>>).
+
+%% @doc Create the authenticate payload to be signed with the key from the auth cert.
+-spec create_payload(Config, RandomBytes) -> <<_:224>>
+    when
+        Config :: config(),
+        RandomBytes :: <<_:24>>.
+create_payload(Config, RandomBytes) ->
+    iolist_to_binary([<<"AUTH0001">>,
+                      public_key_hash(maps:get(client_identity_public_key, Config)),
+                      public_key_hash(maps:get(server_identity_public_key, Config)),
+                      maps:get(server_log, Config),
+                      maps:get(client_log, Config),
+                      certificate_hash(maps:get(server_certificate, Config)),
+                      tls_secrets(maps:get(ssl_session, Config)),
+                      RandomBytes]).
 
 %% @private
 -spec tls_secrets(SSLSession) -> binary()

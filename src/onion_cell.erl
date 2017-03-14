@@ -89,6 +89,17 @@
                     | destroyed
                     | no_such_service.
 
+-type auth() :: #{ client_id_key_digest => <<_:32>>,
+                   server_id_key_digest => <<_:32>>,
+
+                   server_log           => <<_:32>>,
+                   client_log           => <<_:32>>,
+
+                   tls_cert_digest      => <<_:32>>,
+                   tls_secrets_digest   => <<_:32>>,
+                   random_bytes         => <<_:24>>,
+                   signature            => binary()}.
+
 -include("onion_test.hrl").
 
 %% All values are in bytes.
@@ -398,8 +409,12 @@ decode_payload(auth_challenge, <<Challenge:32/binary, MethodsCount:16/integer, R
                      end || <<Method:16/integer>> <= Methods ] };
 
 decode_payload(authenticate, <<AuthType:16/integer, AuthSize:16/integer, Auth:AuthSize/binary>>) ->
-    #{ auth_type => AuthType,
-       auth      => Auth };
+    case AuthType of
+        1 ->
+            #{ auth_type => AuthType, auth => decode_auth(Auth) };
+        _ ->
+            throw({error, invalid_auth_type})
+    end;
 
 decode_payload(authorize, _) ->
     #{};
@@ -433,6 +448,30 @@ integer_to_command(Integer) when is_integer(Integer) ->
         132 -> authorize;
         _   -> {unknown_cell_command, Integer}
     end.
+
+%% @private
+-spec decode_auth(Auth) -> auth()
+    when
+        Auth :: binary().
+decode_auth(<<"AUTH0001", ClientKeyDigest:32/binary,
+                          ServerKeyDigest:32/binary,
+                          ServerLog:32/binary,
+                          ClientLog:32/binary,
+                          TLSCertDigest:32/binary,
+                          TLSSecretsDigest:32/binary,
+                          RandomBytes:24/binary,
+                          Signature/binary>>) ->
+    #{client_id_key_digest => ClientKeyDigest,
+      server_id_key_digest => ServerKeyDigest,
+
+      server_log           => ServerLog,
+      client_log           => ClientLog,
+
+      tls_cert_digest      => TLSCertDigest,
+      tls_secrets_digest   => TLSSecretsDigest,
+      random_bytes         => RandomBytes,
+      signature            => Signature
+    }.
 
 %% @private
 -spec decode_address(Payload) -> {ok, term(), Rest}
