@@ -12,15 +12,33 @@
 -module(onion_document).
 
 %% API.
--export([encode/1,
+-export([decode/1,
+         
+         encode/1,
          get_item/2,
          split/2,
          ed25519_sign/2,
-         rsa_sign/2,
-
-         decode/1]).
+         rsa_sign/2]).
 
 -include("onion_test.hrl").
+
+%% @doc Decode a Tor Document.
+%%
+%% Decodes a document according to the format described in section 1.2
+%% of dir-spec.txt.
+%%
+%% @end
+-spec decode(Data) -> {ok, [Item]} | {error, term()}
+    when
+        Data :: binary(),
+        Item :: {Keyword, Arguments, Object},
+        Keyword   :: atom() | binary(),
+        Arguments :: binary(),
+        Object    :: term().
+decode(Document) ->
+    {ok, Tokens, _EndLine} = onion_document_lexer:string(Document),
+    onion_document_parser:parse(Tokens).
+
 
 %% @doc Encode a given Document into an iolist().
 %%
@@ -100,49 +118,6 @@ rsa_sign(Document, SecretKey) ->
     Hash = crypto:hash(sha, EncodedDocument),
     Signature = onion_rsa:private_encrypt(Hash, SecretKey, rsa_pkcs1_padding),
     Document ++ [{'router-signature', [], [{'SIGNATURE', Signature}]}].
-
--spec decode(Data) -> {ok, [Item]} | {error, term()}
-    when
-        Data      :: binary(),
-        Item      :: {Keyword, Arguments} | {Keyword, Arguments, Object},
-        Keyword   :: binary(),
-        Arguments :: [binary()],
-        Object    :: [binary()].
-decode(Data) when is_binary(Data) ->
-    Lines = binary:split(Data, <<"\n">>, [global, trim]),
-    decode_lines(Lines, none, []).
-
-decode_lines([], Item, Items) ->
-    case Item of
-        none ->
-            {ok, lists:reverse(Items)};
-
-        {_, _} = Item ->
-            {ok, lists:reverse([Item | Items])};
-
-        {_, _, _} ->
-            %% A partial object.
-            {error, invalid_document}
-    end;
-
-decode_lines([<<"-----BEGIN ", _/binary>> = ObjectBegin | Rest], {Keyword, Arguments}, Items) ->
-    decode_lines(Rest, {Keyword, Arguments, [ObjectBegin]}, Items);
-
-decode_lines([<<"-----END ", _/binary>> = ObjectEnd | Rest], {Keyword, Arguments, ObjectLines}, Items) ->
-    decode_lines(Rest, none, [{Keyword, Arguments, lists:reverse([ObjectEnd | ObjectLines])} | Items]);
-
-decode_lines([ObjectLine | Rest], {Keyword, Arguments, ObjectLines}, Items) ->
-    decode_lines(Rest, {Keyword, Arguments, [ObjectLine | ObjectLines]}, Items);
-
-decode_lines([Line | Rest], Item, Items) ->
-    [Keyword | Arguments] = binary:split(Line, <<" ">>, [global]),
-    case Item of
-        none ->
-            decode_lines(Rest, {Keyword, Arguments}, Items);
-
-        Item ->
-            decode_lines(Rest, {Keyword, Arguments}, [Item | Items])
-    end.
 
 %% @private
 -spec keyword(term()) -> binary().
