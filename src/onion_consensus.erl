@@ -87,11 +87,9 @@ decode(Document) ->
 
     %% Parse document and split into appropriate sections
     {ok, Items}                             = onion_document:decode(Document),
-    {ok, PreambleItems, ItemsRest1}         = split_items(Items, 'dir-source'),
-    {ok, AuthoritySectionItems, ItemsRest2} = split_items(ItemsRest1, r),
-    {ok, RouterStatusItems, FooterItems}    = split_items(ItemsRest2, 'directory-footer'),
-    [R1, R2, R3, R4| _Rest] = lists:reverse(RouterStatusItems),
-    io:format("~p~n", [[R1, R2, R3, R4]]),
+    {ok, PreambleItems, ItemsRest1}         = onion_document_utils:split_items(Items, 'dir-source'),
+    {ok, AuthoritySectionItems, ItemsRest2} = onion_document_utils:split_items(ItemsRest1, r),
+    {ok, RouterStatusItems, FooterItems}    = onion_document_utils:split_items(ItemsRest2, 'directory-footer'),
 
     %% Process each section individually
     {ok, _ParsedPreambleItems}      = process_preamble(PreambleItems, PreambleSection),
@@ -141,10 +139,10 @@ verify_router_groups(Items, ItemSpecs) ->
     verify_router_groups(Items, ItemSpecs, []).
 
 verify_router_groups(Items, RouterSpec, ParsedGroups) ->
-    [RouterFirst | Items2 ] = Items,
-    case split_items(Items2, r) of
+    [RouterFirstItem | Items2 ] = Items,
+    case onion_document_utils:split_items(Items2, r) of
         {ok, RouterRest, Rest} ->
-            Router = [RouterFirst | RouterRest],
+            Router = [RouterFirstItem | RouterRest],
             {ParsedRouter, _Length, ItemOrder} = onion_document_utils:decode_items(Router, fun router_decoder/3),
             ok = onion_document_utils:verify_existence_properties(RouterSpec, ItemOrder),
             ok = onion_document_utils:verify_order(RouterSpec, ItemOrder),
@@ -176,27 +174,6 @@ process_footer_section(Items, ItemSpecs) ->
     {ParsedItems, _Length, ItemOrder} = onion_document_utils:decode_items(Items, fun footer_decoder/3),
     ok = onion_document_utils:verify_order(ItemSpecs, ItemOrder),
     {ok, ParsedItems}.
-
-
-%% @private
--spec split_items(Items, Keyword) -> {ok, Part, Rest} | keyword_not_found
-    when
-        Keyword :: atom(),
-        Items   :: [term()],
-        Part    :: Items,
-        Rest    :: Items.
-split_items(Items, Keyword) ->
-    item_splitter(Items, Keyword, []).
-
-%% @private
-item_splitter([{Keyword, _, _} | _] = Items, Keyword, ProcessedItems) ->
-    {ok, lists:reverse(ProcessedItems), Items};
-
-item_splitter([Item | Rest], Keyword, ProcessedItems) ->
-    item_splitter(Rest, Keyword, [Item | ProcessedItems]);
-
-item_splitter([], _Keyword, _ProcessedItems) ->
-    keyword_not_found.
 
 
 %% @private

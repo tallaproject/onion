@@ -35,6 +35,9 @@
         Keyword   :: atom() | binary(),
         Arguments :: binary(),
         Object    :: term().
+decode(Document) when is_binary(Document) ->
+    decode(erlang:binary_to_list(Document));
+
 decode(Document) ->
     {ok, Tokens, _EndLine} = onion_document_lexer:string(Document),
     onion_document_parser:parse(Tokens).

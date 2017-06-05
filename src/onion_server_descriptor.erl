@@ -184,12 +184,11 @@ decode(Document) ->
                                              'onion-key-crosscert'], ItemOrder),
 
     %% Certificate verification
-    DocumentBin = erlang:list_to_binary(Document),
     ok = verify_identity_ed25519_cert(ParsedItems),
     ok = verify_onion_key_crosscert(ParsedItems),
     ok = verify_ntor_onion_key_crosscert(ParsedItems),
-    ok = verify_rsa_signature(DocumentBin, ParsedItems),
-    ok = verify_ed25519_router_signature(DocumentBin, ParsedItems),
+    ok = verify_rsa_signature(Document, ParsedItems),
+    ok = verify_ed25519_router_signature(Document, ParsedItems),
     {ok, lists:reverse(ParsedItems)}.
 
 
@@ -469,7 +468,7 @@ verify_identity_ed25519_cert(Items) ->
     4 = ExtensionType,
     0 = ExtensionFlags,
 
-    %% Verify that if the 'master-key-ed25519' item exists it should be equal the key used here
+    %% Verify that if the 'master-key-ed25519' item exists it should be equal to the key used here
     Ed25519Key = proplists:get_value('master-key-ed25519', Items, Ed25519Key),
 
     %% Verify certificate signature

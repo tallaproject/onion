@@ -8,10 +8,11 @@
          verify_order/2,
          parse_datetime/1,
          sp_split/1,
-         binaries2integers/1
+         binaries2integers/1,
+         split_items/2
         ]).
 
-%% @private
+
 decode_items(Items, Parser) ->
     decode_items(Items, [], 1, #{}, Parser).
 
@@ -35,6 +36,7 @@ decode_items([{Keyword, Arguments, Object} | Rest], ItemsOut, Position, ItemOrde
 decode_items([], ItemsOut, Position, ItemOrdering, _Parser) ->
     DocumentLength = Position - 1,
     {lists:reverse(ItemsOut), DocumentLength, ItemOrdering}.
+
 
 %% @private
 -spec update_stats(Keyword, Position, DocumentStats) -> #{}
@@ -131,7 +133,27 @@ min_list([A, B | Rest]) ->
 min_list([A]) ->
     A.
 
+
+-spec split_items(Items, Keyword) -> {ok, Part, Rest} | keyword_not_found
+    when
+        Keyword :: atom(),
+        Items   :: [term()],
+        Part    :: Items,
+        Rest    :: Items.
+split_items(Items, Keyword) ->
+    item_splitter(Items, Keyword, []).
+
 %% @private
+item_splitter([{Keyword, _, _} | _] = Items, Keyword, ProcessedItems) ->
+    {ok, lists:reverse(ProcessedItems), Items};
+
+item_splitter([Item | Rest], Keyword, ProcessedItems) ->
+    item_splitter(Rest, Keyword, [Item | ProcessedItems]);
+
+item_splitter([], _Keyword, _ProcessedItems) ->
+    keyword_not_found.
+
+
 -spec parse_datetime(DateTimeRaw) -> DateTime
     when
         DateTimeRaw :: binary(),
@@ -141,13 +163,14 @@ parse_datetime(<<Year:4/binary, "-", Month:2/binary, "-", Day:2/binary, " ", Hou
     Time = erlang:list_to_tuple(binaries2integers([Hour, Minutes, Seconds])),
     {Date, Time}.
 
-%% @private
+
 -spec parse_portlist(PortListEncoded) -> [PortOrRange]
     when
       PortListEncoded :: binary(),
       PortOrRange     :: inet:port_number() | {inet:port_number(), inet:port_number()}.
 parse_portlist(PortListEncoded) ->
     lists:map(fun decode_port_or_range/1, binary:split(PortListEncoded, <<",">>, [global])).
+
 
 %% @private
 -spec decode_port_or_range(PortOrRangeEncoded) -> [PortOrRange]
@@ -162,7 +185,7 @@ decode_port_or_range(PortOrRange) ->
             erlang:binary_to_integer(Port)
     end.
 
-%% @private
+
 -spec decode_bool(binary()) -> boolean().
 decode_bool(<<"1">>) ->
     true;
@@ -170,7 +193,7 @@ decode_bool(<<"1">>) ->
 decode_bool(<<"0">>) ->
     false.
 
-%% @private
+
 -spec decode_address(AddressRaw) -> {inet:ip_address(), inet:port()}
     when
         AddressRaw :: binary().
@@ -186,14 +209,11 @@ decode_address(IPv4Raw) ->
     {IPv4, erlang:binary_to_integer(Port)}.
 
 
-
-%% @private
 -spec binaries2integers([binary()]) -> [integer()].
 binaries2integers(Binaries) ->
     lists:map(fun erlang:binary_to_integer/1, Binaries).
 
 
-%% @private
 -spec  sp_split(Arguments) -> [Argument]
     when
       Arguments :: binary() | no_arguments,
