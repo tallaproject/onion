@@ -122,7 +122,7 @@ item_decoder('dir-signing-key', no_arguments, {<<"RSA PUBLIC KEY">>, PublicKeyPE
     %% This key MUST be at least 1024 bits, and MAY be longer.
     {ok, PublicKey} = onion_rsa:der_decode_public_key(PublicKeyDER),
     true = (1024 =< onion_rsa:key_size(PublicKey)),
-    PublicKey;
+    PublicKeyDER;
 
 item_decoder('dir-key-crosscert', no_arguments, {<<"SIGNATURE">>, CrossSignaturePEM}) ->
     %% According to spec both "SIGNATURE" and "ID SIGNATURE" is valid here.
@@ -148,7 +148,8 @@ verify_crosscert(Items) ->
     %% Extract keys and signature
     CrossSignature = proplists:get_value('dir-key-crosscert', Items),
     IdentityKey = proplists:get_value('dir-identity-key', Items),
-    SigningKey = proplists:get_value('dir-signing-key', Items),
+    SigningKeyDER = proplists:get_value('dir-signing-key', Items),
+    {ok, SigningKey} = onion_rsa:der_decode_public_key(SigningKeyDER),
 
     %% Verify signature
     IdentityDigest = crypto:hash(sha, IdentityKey),

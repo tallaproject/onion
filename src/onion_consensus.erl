@@ -15,9 +15,70 @@
 %%% -----------------------------------------------------------
 -module(onion_consensus).
 
--export([decode/1]).
+-export([decode/1,
+         verify_consensus/3]).
 
 -record(authority_group, {dir_source, contact, vote_digest}).
+
+%% @doc Verify consensus signatures made by the authorities
+-spec verify_consensus(Document, Items, KeyCertificates) -> ok
+      when
+          Document        :: binary(),
+          Items           :: [term()],
+          KeyCertificates :: [term()].
+verify_consensus(Document, Items, KeyCertificates) ->
+    {ok, Fingerprint2KeyCert} = mapify(KeyCertificates),
+    SigningPart = part_to_sign(Document),
+    lists:all(fun({'directory-signature', SignatureData}) ->
+                      valid_signature(SigningPart, SignatureData, Fingerprint2KeyCert);
+                 (_) ->
+                      true
+              end, Items),
+    ok.
+
+
+%% @private
+-spec mapify([KeyCertificate]) -> {ok, #{}}
+      when
+          KeyCertificate :: term().
+mapify(KeyCertificates) ->
+    mapify(KeyCertificates, #{}).
+
+mapify([KeyCertificate | Rest], DocumentMap) ->
+    Fingerprint = proplists:get_value(fingerprint, KeyCertificate),
+    mapify(Rest, DocumentMap# { Fingerprint => KeyCertificate });
+
+mapify([], DocumentMap) ->
+    {ok, DocumentMap}.
+
+
+%% @private
+-spec valid_signature(Message, SignatureData, Fingerprint2KeyCert) -> true
+    when
+        Message             :: binary(),
+        SignatureData       :: {atom(), binary(), binary(), binary()},
+        Fingerprint2KeyCert :: #{}.
+valid_signature(Message, {Algorithm, Identity, SigKeyDigest, Signature}, Fingerprint2KeyCert) ->
+    MessageDigest = crypto:hash(Algorithm, Message),
+
+    %% Extract signing key from key certificate
+    KeyCert = maps:get(Identity, Fingerprint2KeyCert),
+    SigningKeyDER = proplists:get_value('dir-signing-key', KeyCert),
+    {ok, SigningKey} = onion_rsa:der_decode_public_key(SigningKeyDER),
+
+    %% Verify that signing key digest matches the one supplied in consensus directory-signature item
+    SigKeyDigest = crypto:hash(sha, SigningKeyDER),
+
+    %% Verify that signature is encrypted message digest
+    MessageDigest = onion_rsa:public_decrypt(Signature, SigningKey, rsa_pkcs1_padding),
+    true.
+
+%% @private
+-spec part_to_sign(binary()) -> binary().
+part_to_sign(Consensus) ->
+    {Offset, Length} = binary:match(Consensus, <<"\ndirectory-signature ">>),
+    binary:part(Consensus, {0, Offset + Length}).
+
 
 %% @doc Parse and verify a consensus document.
 -spec decode(Document) -> {ok, ParsedItems}
@@ -92,12 +153,12 @@ decode(Document) ->
     {ok, RouterStatusItems, FooterItems}    = onion_document_utils:split_items(ItemsRest2, 'directory-footer'),
 
     %% Process each section individually
-    {ok, _ParsedPreambleItems}      = process_preamble(PreambleItems, PreambleSection),
-    {ok, _ParsedAuthSectionItems}   = process_authority_section(AuthoritySectionItems, AuthoritySectionGroup),
-    {ok, _ParsedRouterSectionItems} = process_router_section(RouterStatusItems, RouterStatusEntries),
-    {ok, _ParsedFooterItems}        = process_footer_section(FooterItems, FooterSection),
-    %% FIXME (lga) concatenate parsed items here.
-    {ok, not_finished}.
+    {ok, ParsedPreambleItems}      = process_preamble(PreambleItems, PreambleSection),
+    {ok, ParsedAuthSectionItems}   = process_authority_section(AuthoritySectionItems, AuthoritySectionGroup),
+    {ok, ParsedRouterSectionItems} = process_router_section(RouterStatusItems, RouterStatusEntries),
+    {ok, ParsedFooterItems}        = process_footer_section(FooterItems, FooterSection),
+    {ok, ParsedPreambleItems ++ ParsedAuthSectionItems ++ ParsedRouterSectionItems ++ ParsedFooterItems}.
+
 
 %% @private
 process_preamble(Items, ItemSpecs) ->
@@ -309,15 +370,21 @@ footer_decoder('bandwidth-weights', BWWeights, no_object) ->
     %% Wgb=10000 Wgd=0 Wgg=5870 Wgm=5870 Wmb=10000 Wmd=0 Wme=0 Wmg=4130 Wmm=10000
     onion_document_utils:sp_split(BWWeights);
 
-footer_decoder('directory-signature', Arguments, {<<"SIGNATURE">>, Signature}) ->
+footer_decoder('directory-signature', Arguments, {<<"SIGNATURE">>, SignatureB64}) ->
     %% Here the exact number of arguments is required.
-    case onion_document_utils:sp_split(Arguments) of
-        [Algorithm, Identity, SigKeyDigest] ->
-            {Algorithm, Identity, SigKeyDigest, Signature};
+    ArgsList = onion_document_utils:sp_split(Arguments),
+    [Algorithm, IdentityB16, SigKeyDigestB16] = case length(ArgsList) of
+        3 ->
+            ArgsList;
 
-        [Identity, SigKeyDigest] ->
-            {sha1, Identity, SigKeyDigest, Signature}
-    end;
+        2 ->
+            [sha | ArgsList]
+    end,
+    {ok, SigKeyDigest} = onion_base16:decode(SigKeyDigestB16),
+    {ok, Identity} = onion_base16:decode(IdentityB16),
+    {ok, Signature} = onion_base64:decode(SignatureB64),
+
+    {Algorithm, Identity, SigKeyDigest, Signature};
 
 footer_decoder(_Keyword, _, _) ->
     throw({error, unkown_keyword}).
