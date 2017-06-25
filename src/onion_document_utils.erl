@@ -197,15 +197,14 @@ decode_bool(<<"0">>) ->
 -spec decode_address(AddressRaw) -> {inet:ip_address(), inet:port()}
     when
         AddressRaw :: binary().
-decode_address(<<"[", IPv6Raw/binary>>) ->
-    [IPv6_, Port] = binary:split(IPv6Raw, <<"]:">>),
-    %% This would also pass on an IPv4 address
-    {ok, IPv6} = inet:decode_address(erlang:binary_to_list(IPv6_)),
+decode_address(<<"[", IPv6Bin/binary>>) ->
+    [IPv6String, Port] = binary:split(IPv6Bin, <<"]:">>),
+    {ok, IPv6} = inet:parse_ipv6strict_address(erlang:binary_to_list(IPv6String)),
     {IPv6, erlang:binary_to_integer(Port)};
 
-decode_address(IPv4Raw) ->
-    [IPv4_, Port] = binary:split(IPv4Raw, <<":">>),
-    {ok, IPv4} = inet:decode_address(erlang:binary_to_list(IPv4_)),
+decode_address(IPv4Bin) ->
+    [IPv4String, Port] = binary:split(IPv4Bin, <<":">>),
+    {ok, IPv4} = inet:parse_ipv4strict_address(erlang:binary_to_list(IPv4String)),
     {IPv4, erlang:binary_to_integer(Port)}.
 
 
