@@ -176,19 +176,26 @@ decode(Document) ->
     [SecondLast] = maps:get('router-sig-ed25519', ItemOrder, [SecondLast]),
     [DocumentLength] = maps:get('router-signature', ItemOrder),
 
-    %% [At most once, required when identity-ed25519 is present]
+    %% [At most once, required when identity-ed25519 is present]:
+    %%   'ntor-onion-key-crosscert'
+    %%   'router-sig-ed25519'
+    %%   'onion-key-crosscert'
     %% The spec actually says actually says "forbidden otherwise" for
     %% onion-key-crosscert but we do not check that. Not sure it is necessary.
-    required_if_identity_ed25519_is_present(['ntor-onion-key-crosscert',
-                                             'router-sig-ed25519',
-                                             'onion-key-crosscert'], ItemOrder),
+    %% If one of these is NOT present when identity-ed25519 is, the verification
+    %% below will fail.
+    case identity_ed25519_is_present(ItemOrder) of
+        true ->
+            ok = verify_identity_ed25519_cert(ParsedItems),
+            ok = verify_onion_key_crosscert(ParsedItems),
+            ok = verify_ntor_onion_key_crosscert(ParsedItems),
+            ok = verify_ed25519_router_signature(Document, ParsedItems);
+        false ->
+            ok
+    end,
 
     %% Certificate verification
-    ok = verify_identity_ed25519_cert(ParsedItems),
-    ok = verify_onion_key_crosscert(ParsedItems),
-    ok = verify_ntor_onion_key_crosscert(ParsedItems),
     ok = verify_rsa_signature(Document, ParsedItems),
-    ok = verify_ed25519_router_signature(Document, ParsedItems),
     {ok, lists:reverse(ParsedItems)}.
 
 
@@ -239,17 +246,15 @@ verify_ed25519_router_signature(Document, Items) ->
 
 
 %% @private
--spec required_if_identity_ed25519_is_present(ItemsRequired, DocumentStats) -> ok
+-spec identity_ed25519_is_present(DocumentStats) -> ok
     when
-      ItemsRequired :: [atom()],
       DocumentStats :: #{}.
-required_if_identity_ed25519_is_present(ItemsRequired, DocumentStats) ->
+identity_ed25519_is_present(DocumentStats) ->
     case maps:get('identity-ed25519', DocumentStats, not_found) of
         not_found ->
-            ok;
+            false;
         _ ->
-            true = lists:all(fun (Keyword) -> maps:is_key(Keyword, DocumentStats) end, ItemsRequired),
-            ok
+            true
     end.
 
 
