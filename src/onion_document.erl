@@ -28,17 +28,34 @@
 %% of dir-spec.txt.
 %%
 %% @end
--spec decode(Data) -> {ok, [Item]} | {error, term()}
+-spec decode(Data) -> {ok, [Item]} | {error, invalid_document}
     when
         Data :: binary(),
         Item :: {Keyword, Arguments, Object},
         Keyword   :: atom() | binary(),
         Arguments :: binary(),
         Object    :: term().
+decode(<<>>) ->
+    {ok, []};
+
 decode(Document) when is_binary(Document) ->
     decode(erlang:binary_to_list(Document));
 
 decode(Document) ->
+    try decode_(Document) of
+        Items ->
+            Items
+    catch
+        _Error:_WhatNow ->
+            {error, invalid_document}
+    end.
+
+%% @private
+-spec decode_(Document) -> {ok, [Item]}
+    when
+        Document :: binary(),
+        Item     :: term().
+decode_(Document) ->
     {ok, Tokens, _EndLine} = onion_document_lexer:string(Document),
     onion_document_parser:parse(Tokens).
 
@@ -184,20 +201,22 @@ encode_object({Type, Data}) ->
 decode_basic_test() ->
     [
         ?assertEqual(decode(<<>>), {ok, []}),
-        ?assertEqual(decode(<<"foobar">>), {ok, [{<<"foobar">>, []}]}),
+        ?assertEqual(decode(<<"foobar">>), {ok, [{foobar, no_arguments, no_object}]}),
 
         ?assertEqual(decode(<<"foobar\nfoobar\n">>), {ok, [
-                                                           {<<"foobar">>, []},
-                                                           {<<"foobar">>, []}
+                                                           {foobar, no_arguments, no_object},
+                                                           {foobar, no_arguments, no_object}
                                                           ]}),
 
         ?assertEqual(decode(<<"foo a b c\nbar d e f\n">>), {ok, [
-                                                           {<<"foo">>, [<<"a">>, <<"b">>, <<"c">>]},
-                                                           {<<"bar">>, [<<"d">>, <<"e">>, <<"f">>]}
+                                                           {foo, <<"a b c">>, no_object},
+                                                           {bar, <<"d e f">>, no_object}
                                                           ]}),
 
-        ?assertEqual(decode(<<"foo\n-----BEGIN foobar-----\nblah\n-----END foobar------\n">>),
-                     {ok, [{<<"foo">>, [], [<<"-----BEGIN foobar-----">>, <<"blah">>, <<"-----END foobar------">>]}]}),
+        ?assertEqual(decode(<<"foo\n-----BEGIN foobar-----\nblah\n-----END foobar-----\n">>),
+                     {ok, [
+                           {foo, no_arguments, {<<"foobar">>, <<"blah">>}}
+                          ]}),
 
         ?assertEqual(decode(<<"foo\n-----BEGIN foobar-----\nblah\n">>), {error, invalid_document})
     ].
