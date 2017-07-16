@@ -218,6 +218,6 @@ decode_basic_test() ->
                            {foo, no_arguments, {<<"foobar">>, <<"blah">>}}
                           ]}),
 
-        ?assertEqual(decode(<<"foo\n-----BEGIN foobar-----\nblah\n">>), {error, invalid_document})
+        ?assertEqual(decode(<<"?foo\n">>), {error, invalid_document})
     ].
 -endif.
