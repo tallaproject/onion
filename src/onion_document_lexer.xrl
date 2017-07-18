@@ -73,19 +73,9 @@ MONTH    = [0-1][1-9]
 DAY      = [0-3][1-9]
 DATE     = {YEAR}\-{MONTH}\-{DAY}
 TIME     = {INT}\:{INT}\:{INT}
-IPV4     = {INT}\.{INT}\.{INT}\.{INT}
-DATETIME = {DATE}{SP}{TIME}
-
-%% This is '"' but using it explicitly screws with erlang syntax-highlight :P
-QUOTE = \x22
 
 
 Rules.
-
-%% We skip these such that we parse cache files from Tor
-@downloaded\-at{SP}{DATETIME}{NL}    : skip_token.
-@uploaded\-at{SP}{DATETIME}{NL}      : skip_token.
-@source{SP}{QUOTE}{IPV4}{QUOTE}{NL}  : skip_token. 
 
 {OBJECT}                             : {token, {object, TokenLine, extract_object(TokenChars)}}.
 {KEYWORD_LINE_NO_ARGS}               : {token, {keyword, TokenLine, erlang:list_to_atom(TokenChars)}}.
