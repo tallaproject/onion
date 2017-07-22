@@ -4,6 +4,7 @@
          decode_items/2,
          decode_bool/1,
          decode_address/1,
+         verify_port/1,
          verify_existence_properties/2,
          verify_order/2,
          parse_datetime/1,
@@ -161,6 +162,7 @@ item_splitter([], _Keyword, _ProcessedItems) ->
 parse_datetime(<<Year:4/binary, "-", Month:2/binary, "-", Day:2/binary, " ", Hour:2/binary, ":", Minutes:2/binary, ":", Seconds:2/binary>>) ->
     Date = erlang:list_to_tuple(binaries2integers([Year, Month, Day])),
     Time = erlang:list_to_tuple(binaries2integers([Hour, Minutes, Seconds])),
+    true = snmp:validate_date_and_time(snmp:universal_time_to_date_and_time({Date, Time})),
     {Date, Time}.
 
 
@@ -207,11 +209,15 @@ decode_address(IPv4Bin) ->
     {ok, IPv4} = inet:parse_ipv4strict_address(erlang:binary_to_list(IPv4String)),
     {IPv4, erlang:binary_to_integer(Port)}.
 
+-spec verify_port(Port) -> true | false
+    when
+        Port :: pos_integer().
+verify_port(Port) ->
+    (0 =< Port) and (Port =< 65535).
 
 -spec binaries2integers([binary()]) -> [integer()].
 binaries2integers(Binaries) ->
     lists:map(fun erlang:binary_to_integer/1, Binaries).
-
 
 -spec  sp_split(Arguments) -> [Argument]
     when
