@@ -168,6 +168,9 @@ decode(Document) ->
     %% Router entry should exist and be the first
     #{router := [1]} = ItemOrder,
 
+    %% Verify that a valid exit policy is defined.
+    ok = verify_exit_policy(ParsedItems, ItemOrder),
+
     %% identity-ed25519 should be second if it's present
     [2] = maps:get('identity-ed25519', ItemOrder, [2]),
 
@@ -195,9 +198,23 @@ decode(Document) ->
     end,
 
     %% Certificate verification
+    ok = verify_fingerprint(ParsedItems),
     ok = verify_rsa_signature(Document, ParsedItems),
-    {ok, lists:reverse(ParsedItems)}.
+    {ok, ParsedItems}.
 
+
+%% @private
+-spec verify_fingerprint([term()]) -> ok.
+verify_fingerprint(Items) ->
+    case proplists:get_value('fingerprint', Items, unavailable) of
+        unavailable ->
+            ok;
+
+        Fingerprint ->
+            SigningKey = proplists:get_value('signing-key', Items),
+            Fingerprint = crypto:hash(sha, SigningKey),
+            ok
+    end.
 
 %% @private
 -spec verify_rsa_signature(Document, Items) -> ok
@@ -266,11 +283,22 @@ identity_ed25519_is_present(DocumentStats) ->
     Object     :: binary(),
     ParsedItem :: term().
 item_decoder(published, UTCTime, no_object) ->
-    <<Year:4/binary, "-", Month:2/binary, "-", Day:2/binary, " ", Hour:2/binary, ":", Minutes:2/binary, ":", Seconds:2/binary>> = UTCTime,
-    {Year, Month, Day, Hour, Minutes, Seconds};
+    onion_document_utils:parse_datetime(UTCTime);
 
 item_decoder(fingerprint, FingerprintRaw, no_object) ->
-    onion_binary:fingerprint(FingerprintRaw);
+    %% Verify 4-char blocks
+    true = lists:all(fun(Chunk) -> size(Chunk) =:= 4 end, onion_document_utils:sp_split(FingerprintRaw)),
+
+    %% Verify valid hex encoding
+    FingerprintHex = binary:replace(FingerprintRaw, <<" ">>, <<"">>, [global]),
+    true = onion_base16:valid(FingerprintHex),
+
+    %% 10 blocks of 4 hex digits is the least (sha1) hash digest size.
+    true = size(FingerprintHex) >= 40,
+
+    %% Decode hex fingerprint
+    {ok, Fingerprint} = onion_base16:decode(FingerprintHex),
+    Fingerprint;
 
 item_decoder(hibernating, BoolRaw, no_object) ->
     onion_document_utils:decode_bool(BoolRaw);
@@ -292,16 +320,23 @@ item_decoder(eventdns, BoolRaw, no_object) ->
 item_decoder(router, Arguments, no_object) ->
     %% Ignore any remaining arguments according to dir-spec section 2.1.1
     [NickName, Address, ORPortBin, SOCKSPortBin, DirPortBin | _RestArguments] = onion_document_utils:sp_split(Arguments),
-    [ORPort, SOCKSPort, DirPort] = onion_document_utils:binaries2integers([ORPortBin, SOCKSPortBin, DirPortBin]),
-    0 = SOCKSPort, % According to spec
+    true = onion_relay:valid_nickname_or_relay_fingerprint(NickName),
+
+    %% 0 = SOCKSPort According to spec
+    [ORPort, 0 = _SOCKSPort, DirPort] = onion_document_utils:binaries2integers([ORPortBin, SOCKSPortBin, DirPortBin]),
+
+    true = lists:all(fun(Port) -> onion_document_utils:verify_port(Port) end, [ORPort, DirPort]),
+    true = ORPort /= 0,
+    {ok, IPv4} = inet:parse_ipv4strict_address(erlang:binary_to_list(Address)),
     #{ nickname => NickName,
-       address  => inet:parse_ipv4_address(binary_to_list(Address)),
+       address  => IPv4,
        or_port  => ORPort,
        dir_port => DirPort};
 
 item_decoder(bandwidth, Arguments, no_object) ->
     ArgumentList = binary:split(Arguments, <<" ">>, [global]),
-    [BandwidthAvg, BandwidthBurst, BandwidthObserved] = onion_document_utils:binaries2integers(ArgumentList),
+    [BandwidthAvg, BandwidthBurst, BandwidthObserved] = BWList = onion_document_utils:binaries2integers(ArgumentList),
+    true = lists:all(fun(Int) -> Int >= 0 end, BWList),
     #{ bandwidth_average  => BandwidthAvg,
        bandwidth_burst    => BandwidthBurst,
        bandwidth_observed => BandwidthObserved };
@@ -325,14 +360,20 @@ item_decoder('or-address', Address, no_object) ->
     onion_document_utils:decode_address(Address);
 
 item_decoder('extra-info-digest', Digests, no_object) ->
-    case DigestList = onion_document_utils:sp_split(Digests) of
+    case onion_document_utils:sp_split(Digests) of
         [Sha1Digest] ->
-            true = onion_base16:valid(Sha1Digest);
+            {ok, Sha1} = onion_base16:decode(Sha1Digest),
+            true = size(Sha1) =:= 20, % 160 bits
+            [Sha1];
+
         [Sha1Digest, Sha256Digest] ->
-            true = onion_base16:valid(Sha1Digest),
-            true = onion_base64:valid(Sha256Digest)
-    end,
-    DigestList;
+            {ok, Sha1} = onion_base16:decode(Sha1Digest),
+            {ok, Sha256} = onion_base64:decode(Sha256Digest),
+            true = size(Sha1) =:= 20, % 160 bits
+            true = size(Sha256) =:= 32, % 256 bits
+            [Sha1, Sha256]
+    end;
+
 item_decoder('hidden-service-dir', VersionNumsBin, no_object) ->
     case onion_document_utils:binaries2integers(onion_document_utils:sp_split(VersionNumsBin)) of
         [] ->
@@ -500,6 +541,15 @@ verify_onion_key_crosscert(Items) ->
     CommonSuffix = size(Payload),
     ok.
 
+%% @private
+verify_exit_policy(ParsedItems, ItemOrder) ->
+    %% There should be at least one accept or reject keyword
+    %% and the last of these MUST be '*:*', according to spec
+    AcceptPositions = maps:get(accept, ItemOrder, [-1]),
+    RejectPositions = maps:get(reject, ItemOrder, [-1]),
+    AllPositions = AcceptPositions ++ RejectPositions,
+    {_, <<"*:*">>} = lists:nth(lists:max(AllPositions), ParsedItems),
+    ok.
 
 %% @private
 -spec verify_ntor_onion_key_crosscert(Items) -> ok
@@ -533,7 +583,8 @@ verify_ntor_onion_key_crosscert(Items) ->
         RSAKey       :: onion_rsa:public_key().
 decode_and_verify_onion_key(RSAKeyBase64) ->
     {ok, RSAKeyDER} = onion_base64:decode(RSAKeyBase64),
-    {ok, RSAKey} = onion_rsa:der_decode_public_key(RSAKeyDER),
+    {ok, {'RSAPublicKey', _, Exponent} = RSAKey} = onion_rsa:der_decode_public_key(RSAKeyDER),
+    true = (65537 =:= Exponent),
     true = (1024 =:= onion_rsa:key_size(RSAKey)),
     RSAKey.
 
