@@ -44,7 +44,10 @@ verify_digest(Context, Data) ->
 
 -spec valid_nickname(Nickname) -> boolean()
     when
-        Nickname :: string().
+        Nickname :: binary() | string().
+valid_nickname(Nickname) when is_binary(Nickname) ->
+    valid_nickname(binary_to_list(Nickname));
+
 valid_nickname(Nickname) ->
     Length = length(Nickname),
     Length > 0 andalso
