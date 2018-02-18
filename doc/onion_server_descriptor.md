@@ -35,7 +35,7 @@ dir-spec.txt
 encode(ServerDescriptor) -&gt; iolist()
 </code></pre>
 
-<ul class="definitions"><li><code>ServerDescriptor = #{}</code></li></ul>
+<ul class="definitions"><li><code>ServerDescriptor = map()</code></li></ul>
 
 Encode a given ServerDescriptor into an iolist().
 

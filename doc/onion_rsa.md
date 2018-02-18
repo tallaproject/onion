@@ -196,7 +196,7 @@ private_decrypt(CipherText, SecretKey) -&gt; PlainText
 private_decrypt(CipherText, SecretKey, Padding) -&gt; PlainText
 </code></pre>
 
-<ul class="definitions"><li><code>CipherText = binary()</code></li><li><code>SecretKey = <a href="#type-secret_key">secret_key()</a></code></li><li><code>Padding = rsa_pkcs1_padding | rsa_pkcs1_oaep_padding | rsa_no_padding</code></li><li><code>PlainText = binary()</code></li></ul>
+<ul class="definitions"><li><code>CipherText = binary()</code></li><li><code>SecretKey = <a href="#type-secret_key">secret_key()</a></code></li><li><code>Padding = rsa_pkcs1_oaep_padding | rsa_pkcs1_padding | rsa_no_padding</code></li><li><code>PlainText = binary()</code></li></ul>
 
 <a name="private_encrypt-2"></a>
 
@@ -216,7 +216,7 @@ private_encrypt(PlainText, SecretKey) -&gt; CipherText
 private_encrypt(PlainText, SecretKey, Padding) -&gt; CipherText
 </code></pre>
 
-<ul class="definitions"><li><code>PlainText = binary()</code></li><li><code>SecretKey = <a href="#type-secret_key">secret_key()</a></code></li><li><code>Padding = rsa_pkcs1_padding | rsa_no_padding</code></li><li><code>CipherText = binary()</code></li></ul>
+<ul class="definitions"><li><code>PlainText = binary()</code></li><li><code>SecretKey = <a href="#type-secret_key">secret_key()</a></code></li><li><code>Padding = rsa_pkcs1_oaep_padding | rsa_pkcs1_padding | rsa_no_padding</code></li><li><code>CipherText = binary()</code></li></ul>
 
 <a name="public_decrypt-2"></a>
 
@@ -236,7 +236,7 @@ public_decrypt(CipherText, PublicKey) -&gt; PlainText
 public_decrypt(CipherText, PublicKey, Padding) -&gt; PlainText
 </code></pre>
 
-<ul class="definitions"><li><code>CipherText = binary()</code></li><li><code>PublicKey = <a href="#type-public_key">public_key()</a></code></li><li><code>Padding = rsa_pkcs1_padding | rsa_no_padding</code></li><li><code>PlainText = binary()</code></li></ul>
+<ul class="definitions"><li><code>CipherText = binary()</code></li><li><code>PublicKey = <a href="#type-public_key">public_key()</a></code></li><li><code>Padding = rsa_pkcs1_oaep_padding | rsa_pkcs1_padding | rsa_no_padding</code></li><li><code>PlainText = binary()</code></li></ul>
 
 <a name="public_encrypt-2"></a>
 
@@ -256,7 +256,7 @@ public_encrypt(PlainText, PublicKey) -&gt; CipherText
 public_encrypt(PlainText, PublicKey, Padding) -&gt; CipherText
 </code></pre>
 
-<ul class="definitions"><li><code>PlainText = binary()</code></li><li><code>PublicKey = <a href="#type-public_key">public_key()</a></code></li><li><code>Padding = rsa_pkcs1_padding | rsa_pkcs1_oaep_padding | rsa_no_padding</code></li><li><code>CipherText = binary()</code></li></ul>
+<ul class="definitions"><li><code>PlainText = binary()</code></li><li><code>PublicKey = <a href="#type-public_key">public_key()</a></code></li><li><code>Padding = rsa_pkcs1_oaep_padding | rsa_pkcs1_padding | rsa_no_padding</code></li><li><code>CipherText = binary()</code></li></ul>
 
 <a name="secret_key_to_public_key-1"></a>
 

@@ -33,8 +33,8 @@ $ make doc
 <tr><td><a href="onion_base64.md" class="module">onion_base64</a></td></tr>
 <tr><td><a href="onion_binary.md" class="module">onion_binary</a></td></tr>
 <tr><td><a href="onion_cell.md" class="module">onion_cell</a></td></tr>
-<tr><td><a href="onion_cert.md" class="module">onion_cert</a></td></tr>
 <tr><td><a href="onion_certs_cell.md" class="module">onion_certs_cell</a></td></tr>
+<tr><td><a href="onion_circuit.md" class="module">onion_circuit</a></td></tr>
 <tr><td><a href="onion_config.md" class="module">onion_config</a></td></tr>
 <tr><td><a href="onion_dh.md" class="module">onion_dh</a></td></tr>
 <tr><td><a href="onion_document.md" class="module">onion_document</a></td></tr>

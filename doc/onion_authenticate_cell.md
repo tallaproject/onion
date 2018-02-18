@@ -29,7 +29,7 @@ config() = #{client_identity_public_key =&gt; <a href="onion_rsa.md#type-public_
 ## Function Index ##
 
 
-<table width="100%" border="1" cellspacing="0" cellpadding="2" summary="function index"><tr><td valign="top"><a href="#create-1">create/1</a></td><td>Create an authenticate cell from the given configuration.</td></tr></table>
+<table width="100%" border="1" cellspacing="0" cellpadding="2" summary="function index"><tr><td valign="top"><a href="#create-1">create/1</a></td><td>Create an authenticate cell from the given configuration.</td></tr><tr><td valign="top"><a href="#create_payload-2">create_payload/2</a></td><td>Create the authenticate payload to be signed with the key from the auth cert.</td></tr></table>
 
 
 <a name="functions"></a>
@@ -47,4 +47,16 @@ create(Config) -&gt; <a href="onion_cell.md#type-t">onion_cell:t()</a>
 <ul class="definitions"><li><code>Config = <a href="#type-config">config()</a></code></li></ul>
 
 Create an authenticate cell from the given configuration.
+
+<a name="create_payload-2"></a>
+
+### create_payload/2 ###
+
+<pre><code>
+create_payload(Config, RandomBytes) -&gt; &lt;&lt;_:224&gt;&gt;
+</code></pre>
+
+<ul class="definitions"><li><code>Config = <a href="#type-config">config()</a></code></li><li><code>RandomBytes = &lt;&lt;_:24&gt;&gt;</code></li></ul>
+
+Create the authenticate payload to be signed with the key from the auth cert.
 

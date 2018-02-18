@@ -78,7 +78,7 @@ der_decode(CertificateDer) -&gt; {ok, Certificate} | {error, Reason}
 der_encode(Certificate) -&gt; {ok, CertificateDer} | {error, Reason}
 </code></pre>
 
-<ul class="definitions"><li><code>Certificate = #'OTPTBSCertificate'{}</code></li><li><code>CertificateDer = <a href="public_key.md#type-der_encoded">public_key:der_encoded()</a></code></li><li><code>Reason = term()</code></li></ul>
+<ul class="definitions"><li><code>Certificate = #OTPTBSCertificate{}</code></li><li><code>CertificateDer = <a href="public_key.md#type-der_encoded">public_key:der_encoded()</a></code></li><li><code>Reason = term()</code></li></ul>
 
 <a name="is_self_signed-1"></a>
 
@@ -88,7 +88,7 @@ der_encode(Certificate) -&gt; {ok, CertificateDer} | {error, Reason}
 is_self_signed(Certificate) -&gt; boolean()
 </code></pre>
 
-<ul class="definitions"><li><code>Certificate = #'OTPTBSCertificate'{} | <a href="public_key.md#type-der_encoded">public_key:der_encoded()</a></code></li></ul>
+<ul class="definitions"><li><code>Certificate = #OTPTBSCertificate{} | <a href="public_key.md#type-der_encoded">public_key:der_encoded()</a></code></li></ul>
 
 <a name="not_after-1"></a>
 
@@ -98,7 +98,7 @@ is_self_signed(Certificate) -&gt; boolean()
 not_after(Certificate) -&gt; <a href="calendar.md#type-datetime">calendar:datetime()</a>
 </code></pre>
 
-<ul class="definitions"><li><code>Certificate = #'OTPTBSCertificate'{} | <a href="public_key.md#type-der_encoded">public_key:der_encoded()</a></code></li></ul>
+<ul class="definitions"><li><code>Certificate = #OTPTBSCertificate{} | <a href="public_key.md#type-der_encoded">public_key:der_encoded()</a></code></li></ul>
 
 <a name="not_before-1"></a>
 
@@ -108,7 +108,7 @@ not_after(Certificate) -&gt; <a href="calendar.md#type-datetime">calendar:dateti
 not_before(Certificate) -&gt; <a href="calendar.md#type-datetime">calendar:datetime()</a>
 </code></pre>
 
-<ul class="definitions"><li><code>Certificate = #'OTPTBSCertificate'{} | <a href="public_key.md#type-der_encoded">public_key:der_encoded()</a></code></li></ul>
+<ul class="definitions"><li><code>Certificate = #OTPTBSCertificate{} | <a href="public_key.md#type-der_encoded">public_key:der_encoded()</a></code></li></ul>
 
 <a name="public_key-1"></a>
 
@@ -118,7 +118,7 @@ not_before(Certificate) -&gt; <a href="calendar.md#type-datetime">calendar:datet
 public_key(Certificate) -&gt; {ok, <a href="onion_rsa.md#type-public_key">onion_rsa:public_key()</a>} | {error, Reason}
 </code></pre>
 
-<ul class="definitions"><li><code>Certificate = #'OTPTBSCertificate'{} | <a href="public_key.md#type-der_encoded">public_key:der_encoded()</a></code></li><li><code>Reason = term()</code></li></ul>
+<ul class="definitions"><li><code>Certificate = #OTPTBSCertificate{} | <a href="public_key.md#type-der_encoded">public_key:der_encoded()</a></code></li><li><code>Reason = term()</code></li></ul>
 
 <a name="sign-2"></a>
 
@@ -128,7 +128,7 @@ public_key(Certificate) -&gt; {ok, <a href="onion_rsa.md#type-public_key">onion_
 sign(Certificate, SecretKey) -&gt; CertificateDer
 </code></pre>
 
-<ul class="definitions"><li><code>Certificate = #'OTPTBSCertificate'{}</code></li><li><code>SecretKey = <a href="onion_rsa.md#type-secret_key">onion_rsa:secret_key()</a></code></li><li><code>CertificateDer = <a href="public_key.md#type-der_encoded">public_key:der_encoded()</a></code></li></ul>
+<ul class="definitions"><li><code>Certificate = #OTPTBSCertificate{}</code></li><li><code>SecretKey = <a href="onion_rsa.md#type-secret_key">onion_rsa:secret_key()</a></code></li><li><code>CertificateDer = <a href="public_key.md#type-der_encoded">public_key:der_encoded()</a></code></li></ul>
 
 <a name="verify-2"></a>
 
