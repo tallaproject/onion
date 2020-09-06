@@ -1,9 +1,10 @@
 %% encoding: UTF-8
 {application,onion}.
-{modules,[onion_aes,onion_base16,onion_base32,onion_base64,onion_binary,
-          onion_cell,onion_certs_cell,onion_config,onion_dh,onion_document,
-          onion_ed25519,onion_exit_policy,onion_file,onion_kdf,onion_lists,
-          onion_math,onion_ntor,onion_os,onion_pem,onion_protocol,
-          onion_random,onion_registry,onion_relay,onion_rsa,
-          onion_server_descriptor,onion_ssl,onion_string,onion_time,
-          onion_x25519,onion_x509]}.
+{modules,[onion_aes,onion_authenticate_cell,onion_base16,onion_base32,
+          onion_base64,onion_binary,onion_cell,onion_certs_cell,onion_circuit,
+          onion_config,onion_dh,onion_document,onion_ed25519,
+          onion_exit_policy,onion_file,onion_geoip,onion_hybrid,onion_kdf,
+          onion_lists,onion_math,onion_ntor,onion_os,onion_pem,onion_protocol,
+          onion_pubsub,onion_random,onion_registry,onion_relay,onion_rsa,
+          onion_server_descriptor,onion_ssl,onion_ssl_session,onion_string,
+          onion_time,onion_x25519,onion_x509]}.

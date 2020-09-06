@@ -21,7 +21,7 @@ __Authors:__ Alexander Færøy ([`ahf@0x90.dk`](mailto:ahf@0x90.dk)).
 
 
 <pre><code>
-keypair() = <a href="/Users/ahf/src/lab.baconsvin.org/talla/onion/_build/default/lib/ed25519_ref10/doc/ed25519_ref10.md#type-keypair">ed25519_ref10:keypair()</a>
+keypair() = <a href="/home/user/src/lab.baconsvin.org/onion/_build/default/lib/ed25519_ref10/doc/ed25519_ref10.md#type-keypair">ed25519_ref10:keypair()</a>
 </code></pre>
 
 
@@ -31,7 +31,7 @@ keypair() = <a href="/Users/ahf/src/lab.baconsvin.org/talla/onion/_build/default
 
 
 <pre><code>
-public_key() = <a href="/Users/ahf/src/lab.baconsvin.org/talla/onion/_build/default/lib/ed25519_ref10/doc/ed25519_ref10.md#type-public_key">ed25519_ref10:public_key()</a>
+public_key() = <a href="/home/user/src/lab.baconsvin.org/onion/_build/default/lib/ed25519_ref10/doc/ed25519_ref10.md#type-public_key">ed25519_ref10:public_key()</a>
 </code></pre>
 
 
@@ -41,7 +41,7 @@ public_key() = <a href="/Users/ahf/src/lab.baconsvin.org/talla/onion/_build/defa
 
 
 <pre><code>
-secret_key() = <a href="/Users/ahf/src/lab.baconsvin.org/talla/onion/_build/default/lib/ed25519_ref10/doc/ed25519_ref10.md#type-secret_key">ed25519_ref10:secret_key()</a>
+secret_key() = <a href="/home/user/src/lab.baconsvin.org/onion/_build/default/lib/ed25519_ref10/doc/ed25519_ref10.md#type-secret_key">ed25519_ref10:secret_key()</a>
 </code></pre>
 
 <a name="index"></a>

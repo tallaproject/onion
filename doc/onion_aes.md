@@ -29,7 +29,7 @@ state() = term()
 ## Function Index ##
 
 
-<table width="100%" border="1" cellspacing="0" cellpadding="2" summary="function index"><tr><td valign="top"><a href="#decrypt-2">decrypt/2</a></td><td></td></tr><tr><td valign="top"><a href="#encrypt-2">encrypt/2</a></td><td></td></tr><tr><td valign="top"><a href="#init-1">init/1</a></td><td></td></tr></table>
+<table width="100%" border="1" cellspacing="0" cellpadding="2" summary="function index"><tr><td valign="top"><a href="#decrypt-2">decrypt/2</a></td><td></td></tr><tr><td valign="top"><a href="#encrypt-2">encrypt/2</a></td><td></td></tr><tr><td valign="top"><a href="#init-1">init/1</a></td><td></td></tr><tr><td valign="top"><a href="#init-2">init/2</a></td><td></td></tr></table>
 
 
 <a name="functions"></a>
@@ -65,4 +65,14 @@ init(Key) -&gt; State
 </code></pre>
 
 <ul class="definitions"><li><code>Key = binary()</code></li><li><code>State = <a href="#type-state">state()</a></code></li></ul>
+
+<a name="init-2"></a>
+
+### init/2 ###
+
+<pre><code>
+init(Key, IV) -&gt; State
+</code></pre>
+
+<ul class="definitions"><li><code>Key = binary()</code></li><li><code>IV = binary()</code></li><li><code>State = <a href="#type-state">state()</a></code></li></ul>
 
